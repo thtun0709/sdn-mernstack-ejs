@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="auth-wrapper">
+      
+        <h1>Đăng nhập</h1>
+
+        <% if (error) { %>
+          <p class="error"><%= error %></p>
+        <% } %>
+
+        <form method="POST" action="/login">
+          <input type="email" name="email" placeholder="Email" required />
+          <input type="password" name="password" placeholder="Mật khẩu" required />
+          <button type="submit">Đăng nhập</button>
+        </form>
+
+        <p>Chưa có tài khoản? <a href="/register">Đăng ký</a></p>
+      
+    </div>
+  </body>
+</html>

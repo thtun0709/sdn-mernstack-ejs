@@ -1,0 +1,18 @@
+<header>
+    <h2>
+        <a href="/" style="text-decoration: none; color: inherit;">
+          <span style="color: white ">Perfume </span> <span style="color: red">House</span>
+        </a>
+      </h2>
+  
+    <nav>
+      <% if (member) { %>
+        <span>Chào, <b><%= member.name %></b></span>
+        <a href="/logout">Đăng xuất</a>
+      <% } else { %>
+        <a href="/login">Đăng nhập</a>
+        <a href="/register">Đăng ký</a>
+      <% } %>
+    </nav>
+  </header>
+  

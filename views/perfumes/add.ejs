@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+    <%- include('../partials/admindashboard') %>
+
+  <h2>Thêm nước hoa mới</h2>
+
+  <% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+  <% } %>
+
+  <form action="/perfumes/add" method="POST" enctype="multipart/form-data">
+    <label>Tên:</label>
+    <input type="text" name="name" required><br>
+
+    <label>Thương hiệu:</label>
+    <input type="text" name="brand"><br>
+
+    <label>Giá:</label>
+    <input type="number" name="price" step="0.01"><br>
+
+    <label>Mô tả:</label>
+    <textarea name="description"></textarea><br>
+
+    <label>Ảnh:</label>
+    <input type="file" name="image" accept="image/*"><br><br>
+
+    <button type="submit">Thêm</button>
+  </form>
+
+</body>
+</html>

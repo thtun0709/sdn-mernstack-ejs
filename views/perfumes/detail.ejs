@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= perfume.name %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    /* === Tổng thể === */
+    body {
+      background: #0c0c0c;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+  
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 50px auto;
+    }
+  
+    /* === Phần chi tiết sản phẩm === */
+    .detail {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+  
+    .detail img {
+      width: 380px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  
+    .info {
+      flex: 1;
+      min-width: 300px;
+    }
+  
+    .info h1 {
+      color: #fff;
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+  
+    .info p {
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+  
+    .price {
+      color: #c41e3a;
+      font-weight: 600;
+      font-size: 22px;
+      margin: 15px 0;
+    }
+  
+    /* === Bình luận === */
+    .comment-section {
+      margin-top: 60px;
+    }
+  
+    .comment-section h2 {
+      color: #fff;
+      border-left: 4px solid #c41e3a;
+      padding-left: 12px;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+  
+    .comment {
+      background: #151515;
+      border: 1px solid #222;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+  
+    .comment small {
+      color: #aaa;
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+  
+    .comment-form textarea {
+      width: 100%;
+      background: #111;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 10px;
+      resize: none;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+  
+    .comment-form button {
+      background: #c41e3a;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+  
+    .comment-form button:hover {
+      background: #a0142e;
+    }
+  
+    .login-link {
+      color: #c41e3a;
+      text-decoration: none;
+      font-weight: 500;
+    }
+  
+    .login-link:hover {
+      text-decoration: underline;
+    }
+  
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .detail {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+  
+      .detail img {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+  </style>
+  
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+  
+  <div class="container">
+    <!-- Chi tiết nước hoa -->
+    <div class="detail">
+      <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
+      <div class="info">
+        <h1><%= perfume.name %></h1>
+        <p><b>Thương hiệu:</b> <%= perfume.brand %></p>
+        <p><b>Giới tính:</b> <%= perfume.gender %></p>
+        <p class="price"><%= perfume.price.toLocaleString() %> VND</p>
+        <p><%= perfume.description || "Không có mô tả cho sản phẩm này." %></p>
+      </div>
+    </div>
+
+    <!-- Bình luận -->
+    <div class="comment-section">
+      <h2>Bình luận</h2>
+
+      <% if (member) { %>
+        <form class="comment-form" action="/perfumes/<%= perfume._id %>/comment" method="POST">
+          <textarea name="content" rows="3" placeholder="Viết bình luận..." required></textarea>
+          <button type="submit">Gửi</button>
+        </form>
+      <% } else { %>
+        <p>
+          <a href="/login" class="login-link">Đăng nhập</a> để bình luận.
+        </p>
+      <% } %>
+
+      <% if (comments && comments.length > 0) { %>
+        <% comments.forEach(c => { %>
+          <div class="comment">
+            <p><%= c.content %></p>
+            <small>👤 <%= c.userId ? c.userId.name : 'Ẩn danh' %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>Chưa có bình luận nào.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

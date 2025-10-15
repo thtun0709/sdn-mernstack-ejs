@@ -1,0 +1,62 @@
+<!-- views/partials/admindashboard.ejs -->
+<div class="admin-dashboard">
+    <h2 class="logo">
+      <a href="/perfumes" style="color: #fff; text-decoration: none;">Admin Panel</a>
+      <span>Chào, <b><%= member.name %></b></span>
+    </h2>
+  
+    <ul class="menu">
+      <li><a href="/perfumes">📦 Quản lý Nước hoa</a></li>
+      <li><a href="/users">👥 Quản lý Người dùng</a></li>
+      <li><a href="/logout">🚪 Đăng xuất</a></li>
+    </ul>
+  </div>
+  
+  <style>
+    .admin-dashboard {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 230px;
+      background: #151515;
+      border-right: 1px solid #222;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+  
+    .admin-dashboard .logo {
+      color: #fff;
+      text-align: center;
+      font-size: 20px;
+      margin: 0;
+    }
+  
+    .admin-dashboard .menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .admin-dashboard .menu a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 15px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: 0.3s;
+      display: block;
+    }
+  
+    .admin-dashboard .menu a:hover,
+    .admin-dashboard .menu a.active {
+      background: #c41e3a;
+      color: #fff;
+    }
+  </style>
+  

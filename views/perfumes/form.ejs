@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 60px auto;
+      background: #111;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(196, 30, 58, 0.4);
+    }
+
+    h1 {
+      text-align: center;
+      color: #c41e3a;
+      margin-bottom: 30px;
+    }
+
+    form label {
+      display: block;
+      margin-top: 15px;
+      color: #ccc;
+    }
+
+    form input,
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background: #222;
+      color: #fff;
+    }
+
+    form input[type="file"] {
+      border: none;
+      padding: 5px 0;
+    }
+
+    .preview {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+
+    /* --- Nút hành động --- */
+    .form-actions {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .btn-action {
+      padding: 10px 24px;
+      border-radius: 6px;
+      border: none;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+
+    
+
+    .btn-save {
+      background: #c41e3a;
+      grid-column: span 2;
+      height: 43px;
+    }
+
+    .btn-save:hover {
+      background: #a0142e;
+    }
+
+    .btn-back {
+      background: #333;
+      grid-column: span 2;
+    }
+
+    .btn-back:hover {
+      background: #555;
+    }
+
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/admindashboard') %>
+
+  <div class="form-container">
+    <h1><%= title %></h1>
+    <form
+      action="<%= perfume ? '/perfumes/edit/' + perfume._id : '/perfumes/add' %>"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label>Tên nước hoa</label>
+      <input type="text" name="name" value="<%= perfume ? perfume.name : '' %>" required />
+
+      <label>Thương hiệu</label>
+      <input type="text" name="brand" value="<%= perfume ? perfume.brand : '' %>" required />
+
+      <label>Giá (VND)</label>
+      <input type="number" name="price" value="<%= perfume ? perfume.price : '' %>" required />
+
+      <label>Mô tả</label>
+      <textarea name="description" rows="4"><%= perfume ? perfume.description : '' %></textarea>
+
+      <label>Giới tính</label>
+      <select name="gender">
+        <option value="Unisex" <%= perfume && perfume.gender === 'Unisex' ? 'selected' : '' %>>Unisex</option>
+        <option value="Nam" <%= perfume && perfume.gender === 'Nam' ? 'selected' : '' %>>Nam</option>
+        <option value="Nữ" <%= perfume && perfume.gender === 'Nữ' ? 'selected' : '' %>>Nữ</option>
+      </select>
+
+      <label>Hình ảnh</label>
+      <input type="file" name="image" accept="image/*" />
+
+      <% if (perfume && perfume.image) { %>
+        <div class="preview">
+          <p>Hình hiện tại:</p>
+          <img src="<%= perfume.image %>" alt="<%= perfume.name %>" />
+        </div>
+      <% } %>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-action btn-save">
+          <i class="fa-solid fa-floppy-disk"></i> Lưu
+        </button>
+        <a href="/perfumes" class="btn-action btn-back">
+          <i class="fa-solid fa-arrow-left"></i> Quay lại
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

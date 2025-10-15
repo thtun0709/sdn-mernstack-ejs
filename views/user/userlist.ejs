@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    body {
+      background-color: #0c0c0c;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1300px;
+      margin: 40px auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .user-list {
+      width: 100%;
+      margin-top: 30px;
+      color: #fff;
+      border-collapse: collapse;
+    }
+
+    .list-header {
+      display: grid;
+      grid-template-columns: 1.2fr 1.5fr 1fr 1fr 1fr;
+      background: #202020;
+      padding: 12px 15px;
+      border-bottom: 2px solid #c41e3a;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .user-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1.5fr 1fr 1fr 1fr;
+      align-items: center;
+      background: #151515;
+      border-bottom: 1px solid #333;
+      padding: 10px 15px;
+      transition: background 0.3s ease;
+    }
+
+    .user-row:hover {
+      background: #1e1e1e;
+    }
+
+    .status {
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .status.active {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .status.locked {
+      color: #dc3545;
+      font-weight: 600;
+    }
+
+    .user-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-icon {
+      color: #fff;
+      background: #c41e3a;
+      padding: 8px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.3s;
+      font-size: 15px;
+    }
+
+    .btn-icon:hover {
+      background: #a0142e;
+    }
+
+    .btn-toggle { background: #1a5f7a; }
+    .btn-toggle:hover { background: #207398; }
+
+    .btn-delete { background: #700; }
+    .btn-delete:hover { background: #a00; }
+
+    /* --- Popup overlay (fixed & centered) --- */
+    .popup {
+      position: fixed;
+      inset: 0; /* top:0; right:0; bottom:0; left:0; */
+      display: none; /* show via JS */
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.55);
+      z-index: 9999;
+      padding: 20px; /* mobile spacing */
+      backdrop-filter: blur(2px);
+    }
+
+    /* popup visible state helper (if needed) */
+    .popup.show { display: flex; }
+
+    .popup-content {
+      width: 100%;
+      max-width: 420px;
+      background: #151515;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      text-align: center;
+      transform-origin: center;
+      animation: popup-in 160ms ease-out;
+    }
+
+    @keyframes popup-in {
+      from { transform: translateY(8px) scale(0.99); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .popup-content h3 {
+      margin: 0 0 10px 0;
+      color: #fff;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .popup-text {
+      color: #ccc;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .popup-btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .popup-btn.confirm {
+      background: #c41e3a;
+      color: #fff;
+    }
+
+    .popup-btn.cancel {
+      background: #303030;
+      color: #fff;
+    }
+
+    /* close by clicking the X (optional) */
+    .popup-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: transparent;
+      color: #ddd;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .popup-content { padding: 18px; }
+      .list-header, .user-row { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar Admin -->
+  <%- include('../partials/admindashboard') %>
+
+  <div class="container">
+    <h1>Manage <span style="color:#c41e3a;">Users</span></h1>
+
+    <div class="user-list">
+      <div class="list-header">
+        <span>Tên</span>
+        <span>Email</span>
+        <span>Quyền</span>
+        <span>Trạng thái</span>
+        <span>Hành động</span>
+      </div>
+
+      <% users.forEach(u => { %>
+        <div class="user-row" id="user-<%= u._id %>">
+          <div><%= u.name %></div>
+          <div><%= u.email %></div>
+          <div><%= u.role %></div>
+          <div class="status <%= u.isActive ? 'active' : 'locked' %>">
+            <%= u.isActive ? 'Hoạt động' : 'Bị khóa' %>
+          </div>
+          <div class="user-actions">
+            <a href="#" class="btn-icon btn-toggle"
+               title="Khóa/Mở"
+               data-user-id="<%= u._id %>"
+               data-is-active="<%= u.isActive ? 'true' : 'false' %>">
+              <i class="fa-solid <%= u.isActive ? 'fa-lock' : 'fa-unlock' %>"></i>
+            </a>
+
+            <a href="/users/delete/<%= u._id %>" class="btn-icon btn-delete"
+               onclick="return confirm('Xóa người dùng này?')" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- Popup xác nhận khóa/mở -->
+  <div class="popup" id="confirmPopup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content" role="document">
+      <button class="popup-close" id="popupClose" aria-label="Đóng">&times;</button>
+      <h3 id="popupMessage">Xác nhận</h3>
+      <div class="popup-text" id="popupSub"></div>
+      <div class="popup-buttons">
+        <button class="popup-btn confirm" id="confirmBtn">Xác nhận</button>
+        <button class="popup-btn cancel" id="cancelBtn">Hủy</button>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script>
+    (function () {
+      let currentUserId = null;
+      let currentIsActive = false;
+
+      const popup = document.getElementById('confirmPopup');
+      const popupMessage = document.getElementById('popupMessage');
+      const popupSub = document.getElementById('popupSub');
+      const confirmBtn = document.getElementById('confirmBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const popupClose = document.getElementById('popupClose');
+
+      // Open popup and lock scroll
+      function openPopup(userId, isActive) {
+        currentUserId = userId;
+        currentIsActive = isActive;
+        popupMessage.innerText = isActive
+          ? "Bạn có chắc muốn KHÓA tài khoản này?"
+          : "Bạn có chắc muốn MỞ tài khoản này?";
+        popupSub.innerText = isActive
+          ? "Người dùng sẽ không thể đăng nhập sau khi bị khóa."
+          : "Người dùng sẽ có thể đăng nhập lại sau khi được mở khóa.";
+        popup.classList.add('show');
+        popup.setAttribute('aria-hidden', 'false');
+        // prevent body scroll
+        document.body.style.overflow = 'hidden';
+        // focus confirm button for accessibility
+        confirmBtn.focus();
+      }
+
+      // Close popup and restore scroll
+      function closePopup() {
+        popup.classList.remove('show');
+        popup.setAttribute('aria-hidden', 'true');
+        currentUserId = null;
+        currentIsActive = false;
+        document.body.style.overflow = '';
+      }
+
+      // Delegate click on toggle links
+      document.addEventListener('click', function (ev) {
+        const target = ev.target.closest && ev.target.closest('.btn-toggle');
+        if (!target) return;
+        ev.preventDefault();
+        const userId = target.getAttribute('data-user-id');
+        const isActiveAttr = target.getAttribute('data-is-active');
+        const isActive = isActiveAttr === 'true';
+        openPopup(userId, isActive);
+      });
+
+      // Confirm => navigate to toggle route (keeps server logic same)
+      confirmBtn.addEventListener('click', function () {
+        if (!currentUserId) return;
+        // use POST if your server expects POST; here we'll navigate GET to keep old behaviour
+        window.location.href = `/users/toggle/${currentUserId}`;
+      });
+
+      // Cancel/close buttons
+      cancelBtn.addEventListener('click', closePopup);
+      popupClose.addEventListener('click', closePopup);
+
+      // Close when clicking outside content
+      popup.addEventListener('click', function (ev) {
+        if (ev.target === popup) closePopup();
+      });
+
+      // Close on ESC
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && popup.classList.contains('show')) {
+          closePopup();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
