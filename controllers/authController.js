@@ -8,7 +8,7 @@ exports.getRegister = (req, res) => {
 
 // [POST] Xử lý đăng ký
 exports.postRegister = async (req, res) => {
-  const { email, password, name, YOB, gender, role } = req.body; // 👈 thêm role
+  const { email, password, name, YOB, gender, role } = req.body;
   try {
     const existing = await Member.findOne({ email });
     if (existing) {
@@ -25,7 +25,7 @@ exports.postRegister = async (req, res) => {
       name,
       YOB,
       gender,
-      role: role || "member", // 👈 mặc định là member nếu không truyền
+      role: role || "member", 
     });
 
     await newMember.save();
@@ -43,55 +43,60 @@ exports.postRegister = async (req, res) => {
 
 // [GET] Trang đăng nhập
 exports.getLogin = (req, res) => {
-  res.render("login", { title: "Đăng nhập", error: null });
+  const redirect = req.query.redirect || "/";
+  res.render("login", { title: "Đăng nhập", error: null, redirect });
 };
 
 // [POST] Xử lý đăng nhập
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, redirect } = req.body;
 
-    // Tìm người dùng
     const member = await Member.findOne({ email });
     if (!member) {
       return res.render("login", {
         error: "Email không tồn tại!",
         title: "Đăng nhập",
+        redirect,
       });
     }
 
-    // Kiểm tra mật khẩu
     const isMatch = await member.matchPassword(password);
     if (!isMatch) {
       return res.render("login", {
         error: "Sai mật khẩu!",
         title: "Đăng nhập",
+        redirect,
       });
     }
 
-    // ✅ Lưu thông tin vào session (quan trọng)
     req.session.member = {
       _id: member._id,
       name: member.name,
       email: member.email,
-      role: member.role, // 👈 dòng này cần có để hiển thị CRUD
+      role: member.role,
     };
 
-    // ✅ Redirect theo vai trò
+    // ✅ Nếu có redirect thì quay lại URL cũ
+    if (redirect && redirect !== "") {
+      return res.redirect(redirect);
+    }
+
+    // ✅ Nếu không có redirect, về trang phù hợp
     if (member.role === "admin") {
-      res.redirect("/perfumes"); // Admin → trang quản lý nước hoa
+      return res.redirect("/perfumes");
     } else {
-      res.redirect("/"); // Member → trang chủ
+      return res.redirect("/");
     }
   } catch (err) {
     console.error("❌ Lỗi đăng nhập:", err);
     res.render("login", {
       error: "Đã xảy ra lỗi, vui lòng thử lại!",
       title: "Đăng nhập",
+      redirect: req.body.redirect || "/",
     });
   }
 };
-
 // [GET] Đăng xuất
 exports.logout = (req, res) => {
   req.session.destroy((err) => {

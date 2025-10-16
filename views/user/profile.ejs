@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      body {
+        background-color: #0c0c0c;
+        color: #fff;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .profile-container {
+        width: 90%;
+        max-width: 600px;
+        margin: 60px auto;
+        background: #111;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(196, 30, 58, 0.4);
+      }
+
+      h1 {
+        text-align: center;
+        color: #c41e3a;
+        margin-bottom: 30px;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        color: #ccc;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        background: #222;
+        color: #fff;
+      }
+
+      .btn-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .btn {
+        padding: 12px;
+        border-radius: 6px;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .btn-save {
+        background: #c41e3a;
+      }
+
+      .btn-save:hover {
+        background: #a0142e;
+      }
+
+      .btn-back {
+        background: #333;
+      }
+
+      .btn-back:hover {
+        background: #444;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="profile-container">
+      <h1>Thông tin cá nhân</h1>
+      <form action="/users/profile/update" method="POST">
+        <label>Tên hiển thị</label>
+        <input type="text" name="name" value="<%= user.name %>" required />
+
+        <label>Email</label>
+        <input type="email" name="email" value="<%= user.email %>" required />
+
+        <label>Mật khẩu (để trống nếu không đổi)</label>
+        <input type="password" name="password" placeholder="••••••••" />
+
+        <div class="btn-container">
+          <button type="submit" class="btn btn-save">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+          </button>
+          <a href="/" class="btn btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

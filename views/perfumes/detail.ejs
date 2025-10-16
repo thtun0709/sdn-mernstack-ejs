@@ -169,15 +169,23 @@
         </form>
       <% } else { %>
         <p>
-          <a href="/login" class="login-link">Đăng nhập</a> để bình luận.
+          <a 
+            href="/login?redirect=/perfumes/<%= perfume._id %>#comments" 
+            class="login-link"
+          >
+            Đăng nhập
+          </a> để bình luận.
         </p>
       <% } %>
 
       <% if (comments && comments.length > 0) { %>
         <% comments.forEach(c => { %>
-          <div class="comment">
+          <div class="comment" id="comments">
             <p><%= c.content %></p>
-            <small>👤 <%= c.userId ? c.userId.name : 'Ẩn danh' %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
+            <small>👤 <%= c.userId.name %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
+            <% if (member && (member._id.toString() === c.userId._id.toString() || member.role === 'admin')) { %>
+              <a href="/comments/delete/<%= c._id %>" style="color:#c41e3a; font-size:13px;" onclick="return confirm('Xóa bình luận này?')">🗑 Xóa</a>
+            <% } %>
           </div>
         <% }) %>
       <% } else { %>

@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const { isAdmin } = require("../middlewares/authMiddleware");
+const { isAuthenticated, isAdmin } = require("../middlewares/authMiddleware");
+const { isLoggedIn } = require("../middlewares/authMiddleware");
 
 console.log("userController.getAllUsers:", typeof userController.getAllUsers);
+console.log("userController.getProfile:", typeof userController.getProfile);
+console.log("isLoggedIn:", typeof isLoggedIn);
 
 // Danh sách người dùng
 router.get("/", isAdmin, userController.getAllUsers);
@@ -13,5 +16,11 @@ router.get("/toggle/:id", isAdmin, userController.toggleUserStatus);
 
 // Xóa người dùng
 router.get("/delete/:id", isAdmin, userController.deleteUser);
+
+// Trang hồ sơ cá nhân
+router.get("/profile",  isAuthenticated, isLoggedIn, userController.getProfile);
+
+// Cập nhật hồ sơ cá nhân
+router.post("/profile/update", isAuthenticated, userController.updateProfile);
 
 module.exports = router;

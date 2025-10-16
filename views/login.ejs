@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+    <%- include('partials/header') %>
     <div class="auth-wrapper">
       
         <h1>Đăng nhập</h1>
@@ -15,6 +16,7 @@
         <% } %>
 
         <form method="POST" action="/login">
+          <input type="hidden" name="redirect" value="<%= redirect %>" />
           <input type="email" name="email" placeholder="Email" required />
           <input type="password" name="password" placeholder="Mật khẩu" required />
           <button type="submit">Đăng nhập</button>

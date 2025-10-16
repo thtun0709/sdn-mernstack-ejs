@@ -8,6 +8,7 @@
     <nav>
       <% if (member) { %>
         <span>Chào, <b><%= member.name %></b></span>
+        <a href="/users/profile">👤</a> |
         <a href="/logout">Đăng xuất</a>
       <% } else { %>
         <a href="/login">Đăng nhập</a>

@@ -18,6 +18,9 @@ exports.getAllPerfumes = async (req, res) => {
 
 // Hiển thị form thêm nước hoa
 exports.showAddForm = (req, res) => {
+  if (!req.session.member || req.session.member.role !== "admin") {
+    return res.status(403).send("Truy cập bị từ chối");
+  }
   res.render('perfumes/form', {
     title: 'Thêm nước hoa',
     member: req.session.member,
@@ -27,6 +30,9 @@ exports.showAddForm = (req, res) => {
 
 // Xử lý thêm mới nước hoa
 exports.addPerfume = async (req, res) => {
+  if (!req.session.member || req.session.member.role !== "admin") {
+    return res.status(403).send("Truy cập bị từ chối");
+  }
   try {
     const { name, brand, price, description, gender } = req.body;
     const image = req.file
@@ -51,6 +57,9 @@ exports.addPerfume = async (req, res) => {
 
 // Hiển thị form chỉnh sửa nước hoa
 exports.showEditForm = async (req, res) => {
+  if (!req.session.member || req.session.member.role !== "admin") {
+    return res.status(403).send("Truy cập bị từ chối");
+  }
   try {
     const perfume = await Perfume.findById(req.params.id);
     if (!perfume) return res.status(404).send('Không tìm thấy sản phẩm');
@@ -67,6 +76,9 @@ exports.showEditForm = async (req, res) => {
 
 // Cập nhật nước hoa
 exports.updatePerfume = async (req, res) => {
+  if (!req.session.member || req.session.member.role !== "admin") {
+    return res.status(403).send("Truy cập bị từ chối");
+  }
   try {
     const { name, brand, price, description, gender } = req.body;
     const updateData = { name, brand, price, description, gender };
@@ -83,6 +95,9 @@ exports.updatePerfume = async (req, res) => {
 
 // Xóa nước hoa
 exports.deletePerfume = async (req, res) => {
+  if (!req.session.member || req.session.member.role !== "admin") {
+    return res.status(403).send("Truy cập bị từ chối");
+  }
   try {
     await Perfume.findByIdAndDelete(req.params.id);
     res.redirect('/perfumes');

@@ -3,9 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>
-    <%= title %>
-  </title>
+  <title><%= title %></title>
   <link rel="stylesheet" href="/css/style.css" />
   <style>
     body {
@@ -26,6 +24,40 @@
       text-align: center;
       font-weight: 600;
       letter-spacing: 1px;
+    }
+
+    /* --- Banner --- */
+    .hero {
+      background: url("https://img.freepik.com/premium-photo/perfume-bottle-water-with-red-smoke-backdrop-3d-mockup_1168123-1891.jpg?semt=ais_hybrid&w=740&q=80") center/cover no-repeat;
+      height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #ccc;
+      max-width: 600px;
+    }
+
+    /* --- Giới thiệu --- */
+    .intro {
+      text-align: center;
+      padding: 50px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      color: #ccc;
+      line-height: 1.8;
     }
 
     /* --- Perfume Grid --- */
@@ -103,13 +135,12 @@
     .search-filter-form {
       width: 90%;
       max-width: 900px;
-      margin: 30px auto;
+      margin: 50px auto;
     }
 
     .search-row {
       display: grid;
-      grid-template-columns: 7fr  0.3fr;
-      /* 7 cột search, 0.3 cho filter */
+      grid-template-columns: 7fr 0.3fr;
       gap: 10px;
     }
 
@@ -124,24 +155,21 @@
       width: 100%;
     }
 
-    .search-btn,
     .filter-btn {
       border: none;
       border-radius: 8px;
       background: #c41e3a;
       color: #fff;
       font-size: 18px;
-      width: 42px;           /* 🔹 chiều rộng cố định */
-  height: 42px;
+      width: 42px;
+      height: 42px;
       cursor: pointer;
     }
 
-    .search-btn:hover,
     .filter-btn:hover {
       background: #a0142e;
     }
 
-    /* ===== FILTER PANEL ===== */
     .filter-panel {
       display: none;
       margin-top: 15px;
@@ -151,7 +179,6 @@
       border-radius: 10px;
       width: 100%;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-      animation: fadeIn 0.3s ease;
     }
 
     .filter-panel select {
@@ -181,11 +208,66 @@
       background: #a0142e;
     }
 
-    /* Responsive */
-    @media (max-width: 700px) {
-      .search-row {
-        grid-template-columns: 1fr 0.3fr;
-      }
+    /* --- Thương hiệu nổi bật --- */
+    .brands {
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .brands h2 {
+      margin-bottom: 30px;
+      font-size: 26px;
+    }
+
+    .brand-logos {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    .brand-logos img {
+      width: 100px;
+      opacity: 0.8;
+      transition: 0.3s;
+    }
+
+    .brand-logos img:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* --- Bộ sưu tập nổi bật --- */
+    .featured {
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .featured-grid {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .featured-card {
+      width: 250px;
+      background: #151515;
+      border: 1px solid #222;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .featured-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .featured-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 4px 10px rgba(255, 0, 50, 0.3);
     }
 
     /* --- Responsive --- */
@@ -212,84 +294,108 @@
 <body>
   <%- include('partials/header') %>
 
-    <div class="container">
-      <h1>Perfume <span style="color:#c41e3a;">House</span></h1>
+  <!-- 🔹 Banner -->
+  <div class="hero">
+    <h1>Perfume <span style="color:#c41e3a;">House</span></h1>
+    <p>Nơi hội tụ hương thơm đẳng cấp, tôn vinh phong cách riêng của bạn.</p>
+  </div>
 
-      <!-- 🔍 SEARCH + FILTER -->
-      <form action="/" method="GET" class="search-filter-form">
-        <div class="search-row">
-          <!-- Ô tìm kiếm -->
-          <input type="text" name="search" placeholder="Tìm theo tên nước hoa..." value="<%= search || '' %>"
-            class="search-input" />
+  <!-- 🔹 Giới thiệu -->
+  <div class="intro">
+    <p>
+      Chào mừng bạn đến với Perfume House – thế giới của những mùi hương tinh tế.
+      Tại đây, chúng tôi mang đến các dòng nước hoa từ thương hiệu nổi tiếng như Chanel, Dior, Gucci, YSL và hơn thế nữa.
+      Hãy tìm kiếm mùi hương phù hợp với cá tính của bạn.
+    </p>
+  </div>
 
+  <!-- 🔹 Thương hiệu nổi bật -->
+  <section class="brands">
+    <h2>Thương hiệu nổi bật</h2>
+    <div class="brand-logos">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsHqPoodzyGI9VGHqBDbc-kQx5M2aMSc1_LQ&s" alt="Dior">
+      <img src="https://cdn.shopify.com/s/files/1/0775/7363/files/chanel-iconic-cc-logo_480x480.jpg?v=1627421098" alt="Chanel">
+      <img src="https://cdn.logojoy.com/wp-content/uploads/20240306150540/1992-Gucci-logo-600x319.png" alt="Gucci">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqOSPxMi98o62tSGPkckluvbYfO_XHOLNwuA&s" alt="YSL">
+    </div>
+  </section>
+  
 
-          <!-- Nút bật/tắt filter -->
-          <button type="button" class="filter-btn" onclick="toggleFilter()">⚙️</button>
+  <!-- 🔹 Bộ sưu tập nổi bật -->
+  <section class="featured">
+    <h2>Bộ sưu tập nổi bật</h2>
+    <div class="featured-grid">
+      <% perfumes.slice(0, 3).forEach(p => { %>
+        <div class="featured-card">
+          <img src="<%= p.image %>" alt="<%= p.name %>">
+          <h3><%= p.name %></h3>
+          <p><%= p.price.toLocaleString() %> VND</p>
         </div>
+      <% }) %>
+    </div>
+  </section>
 
-        <!-- Panel filter -->
-        <div class="filter-panel" id="filter-panel">
-          <select name="brand">
-            <option value="">Tất cả thương hiệu</option>
-            <% brands.forEach(b=> { %>
-              <option value="<%= b %>" <%=brand===b ? 'selected' : '' %>><%= b %>
-              </option>
-              <% }) %>
-          </select>
-
-          <select name="gender">
-            <option value="">Tất cả</option>
-            <option value="Nam" <%=gender==='Nam' ? 'selected' : '' %>>Nam</option>
-            <option value="Nữ" <%=gender==='Nữ' ? 'selected' : '' %>>Nữ</option>
-            <option value="Unisex" <%=gender==='Unisex' ? 'selected' : '' %>>Unisex</option>
-          </select>
-
-          <select name="sort">
-            <option value="">Sắp xếp</option>
-            <option value="asc" <%=sort==='asc' ? 'selected' : '' %>>Giá tăng dần</option>
-            <option value="desc" <%=sort==='desc' ? 'selected' : '' %>>Giá giảm dần</option>
-          </select>
-
-          <button type="submit" class="apply-filter">Áp dụng</button>
-        </div>
-      </form>
-
-      <script>
-        function toggleFilter() {
-          const panel = document.getElementById('filter-panel');
-          panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-        }
-      </script>
-
-
-
-      <% if (!perfumes.length) { %>
-        <p style="text-align:center;">Hiện chưa có sản phẩm nào!</p>
-        <% } else { %>
-          <div class="perfume-grid">
-            <% perfumes.forEach(perfume=> { %>
-              <div class="perfume-card">
-                <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
-                <h3>
-                  <%= perfume.name %>
-                </h3>
-                <p>Thương hiệu: <%= perfume.brand %>
-                </p>
-                <p>Giới tính: <%= perfume.gender %>
-                </p>
-                <p class="perfume-price">
-                  <%= perfume.price.toLocaleString() %> VND
-                </p>
-                <div class="center-btn">
-                  <a href="/perfumes/<%= perfume._id %>" class="btn">View Details</a>
-                </div>
-              </div>
-              <% }) %>
-          </div>
-          <% } %>
+  <!-- 🔍 SEARCH + FILTER -->
+  <form action="/" method="GET" class="search-filter-form">
+    <div class="search-row">
+      <input type="text" name="search" placeholder="Tìm theo tên nước hoa..." value="<%= search || '' %>" class="search-input" />
+      <button type="button" class="filter-btn" onclick="toggleFilter()">⚙️</button>
     </div>
 
-    <%- include('partials/footer') %>
-</body>
+    <div class="filter-panel" id="filter-panel">
+      <select name="brand">
+        <option value="">Tất cả thương hiệu</option>
+        <% brands.forEach(b=> { %>
+          <option value="<%= b %>" <%=brand===b ? 'selected' : '' %>><%= b %></option>
+        <% }) %>
+      </select>
 
+      <select name="gender">
+        <option value="">Tất cả</option>
+        <option value="Nam" <%=gender==='Nam' ? 'selected' : '' %>>Nam</option>
+        <option value="Nữ" <%=gender==='Nữ' ? 'selected' : '' %>>Nữ</option>
+        <option value="Unisex" <%=gender==='Unisex' ? 'selected' : '' %>>Unisex</option>
+      </select>
+
+      <select name="sort">
+        <option value="">Sắp xếp</option>
+        <option value="asc" <%=sort==='asc' ? 'selected' : '' %>>Giá tăng dần</option>
+        <option value="desc" <%=sort==='desc' ? 'selected' : '' %>>Giá giảm dần</option>
+      </select>
+
+      <button type="submit" class="apply-filter">Áp dụng</button>
+    </div>
+  </form>
+
+  <script>
+    function toggleFilter() {
+      const panel = document.getElementById('filter-panel');
+      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+
+  <!-- 🔹 Danh sách sản phẩm -->
+  <div class="container">
+    <% if (!perfumes.length) { %>
+      <p style="text-align:center;">Hiện chưa có sản phẩm nào!</p>
+    <% } else { %>
+      <div class="perfume-grid">
+        <% perfumes.forEach(perfume=> { %>
+          <div class="perfume-card">
+            <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
+            <h3><%= perfume.name %></h3>
+            <p>Thương hiệu: <%= perfume.brand %></p>
+            <p>Giới tính: <%= perfume.gender %></p>
+            <p class="perfume-price"><%= perfume.price.toLocaleString() %> VND</p>
+            <div class="center-btn">
+              <a href="/perfumes/<%= perfume._id %>" class="btn">View Details</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
 </html>

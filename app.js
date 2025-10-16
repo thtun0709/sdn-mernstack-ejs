@@ -51,7 +51,9 @@ app.use(
 // app.use(expressLayouts);
 
 const { sessionData } = require("./middlewares/sessionMiddleware");
-app.use(sessionData);
+const { isLoggedIn } = require("./middlewares/authMiddleware");
+app.use(sessionData);   
+app.use(isLoggedIn);
 
 const authRoutes = require("./router/authRouter");
 app.use("/", authRoutes);
@@ -97,6 +99,9 @@ app.get('/', async (req, res) => {
 const userRouter = require("./router/userRouter");
 app.use("/users", userRouter);
 
+// Comment routes 
+const commentRouter = require("./router/commentRouter");
+app.use("/comments", commentRouter);
 
 
 const PORT = process.env.PORT || 3000;

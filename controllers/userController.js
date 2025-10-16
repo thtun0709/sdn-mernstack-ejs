@@ -41,3 +41,57 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send("Lỗi khi xóa người dùng");
   }
 };
+
+
+// ✅ User - Trang hồ sơ cá nhân
+exports.getProfile = async (req, res) => {
+  try {
+    const sessionMember = req.session.member;
+    if (!sessionMember || !sessionMember._id) {
+      console.warn("⚠️ Chưa có session.member");
+      return res.redirect("/login");
+    }
+
+    const user = await Member.findById(sessionMember._id);
+    if (!user) return res.redirect("/login");
+
+    res.render("user/profile", {
+      title: "Hồ sơ cá nhân",
+      member: sessionMember, // giữ để header hiển thị
+      user, // dữ liệu mới nhất từ DB
+    });
+  } catch (err) {
+    console.error("❌ Lỗi khi lấy thông tin user:", err);
+    res.redirect("/");
+  }
+};
+
+// ✅ User - Cập nhật hồ sơ cá nhân
+exports.updateProfile = async (req, res) => {
+  try {
+    const sessionMember = req.session.member;
+    if (!sessionMember) return res.redirect("/login");
+
+    const { name, email, password } = req.body;
+    const updatedData = { name, email };
+
+    if (password && password.trim() !== "") {
+      updatedData.password = await bcrypt.hash(password, 10);
+    }
+
+    const updatedUser = await Member.findByIdAndUpdate(
+      sessionMember._id,
+      updatedData,
+      { new: true }
+    );
+
+    // Cập nhật lại session để đồng bộ hiển thị
+    req.session.member.name = updatedUser.name;
+    req.session.member.email = updatedUser.email;
+
+    res.redirect("/users/profile");
+  } catch (err) {
+    console.error("❌ Lỗi khi cập nhật hồ sơ:", err);
+    res.redirect("/users/profile");
+  }
+};
