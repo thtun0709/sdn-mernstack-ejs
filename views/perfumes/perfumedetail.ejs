@@ -96,21 +96,25 @@
     <div class="page-container">
       <div class="perfume-container">
         <div class="perfume-detail">
-          <img src="<%= perfume.image || '/images/no-image.png' %>" alt="<%= perfume.name %>">
+          <img src="<%= perfume.image || '/images/no-image.png' %>" alt="<%= (perfume.perfumeName || perfume.name) %>">
 
           <div class="info">
             <h2>
-              <%= perfume.name %>
+              <%= (perfume.perfumeName || perfume.name) %>
             </h2>
             <p><strong>Brand:</strong>
-              <%= perfume.brand %>
+              <%= (perfume.brand && (perfume.brand.brandName || perfume.brand.name)) || perfume.brand || '—' %>
             </p>
-            <p><strong>Gender:</strong>
-              <%= perfume.gender %>
-            </p>
+            <p><strong>URI:</strong> <%= perfume.uri || '—' %></p>
+            <p><strong>Concentration:</strong> <%= perfume.concentration || '—' %></p>
+            <p><strong>Volume:</strong> <%= perfume.volume ? (perfume.volume + ' ml') : '—' %></p>
+            <p><strong>Target:</strong> <%= perfume.targetAudience || perfume.gender || '—' %></p>
             <p><strong>Description:</strong>
               <%= perfume.description || 'No description' %>
             </p>
+            <% if (perfume.ingredients) { %>
+              <p><strong>Ingredients:</strong> <%= perfume.ingredients %></p>
+            <% } %>
             <p class="price">
               <%= perfume.price.toLocaleString() %> VND
             </p>

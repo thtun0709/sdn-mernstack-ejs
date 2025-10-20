@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const perfumeSchema = new mongoose.Schema(
   {
+    // Trường cũ (giữ để tương thích)
     name: {
       type: String,
       required: [true, "Tên nước hoa không được để trống"],
@@ -23,13 +24,22 @@ const perfumeSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: "/images/default_perfume.jpg", // ✅ ảnh mặc định khi chưa có upload
+      default: "/images/default_perfume.jpg", // ảnh mặc định khi chưa có upload
     },
     gender: {
       type: String,
       enum: ["Nam", "Nữ", "Unisex"],
       default: "Unisex",
     },
+
+    // Trường mới theo add.ejs
+    perfumeName: { type: String, trim: true },
+    uri: { type: String, trim: true },
+    concentration: { type: String, enum: ["Extrait", "EDP", "EDT", "Cologne"], default: undefined },
+    ingredients: { type: String, trim: true },
+    volume: { type: Number, min: 0 },
+    targetAudience: { type: String, enum: ["male", "female", "unisex"], default: undefined },
+
     ratings: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" },
@@ -49,6 +59,7 @@ const perfumeSchema = new mongoose.Schema(
 perfumeSchema.pre("save", function (next) {
   if (this.name) this.name = this.name.trim();
   if (this.brand) this.brand = this.brand.trim();
+  if (this.perfumeName) this.perfumeName = this.perfumeName.trim();
   next();
 });
 

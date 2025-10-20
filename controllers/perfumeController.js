@@ -40,24 +40,61 @@ exports.showAddForm = async (req, res) => {
   }
 };
 
-// Xử lý thêm mới nước hoa
+// Xử lý thêm mới nước hoa (hỗ trợ fields mới từ add.ejs)
 exports.addPerfume = async (req, res) => {
   if (!req.session.member || req.session.member.role !== "admin") {
     return res.status(403).send("Truy cập bị từ chối");
   }
   try {
-    const { name, brand, price, description, gender } = req.body;
+    // Nhận từ form mới
+    const {
+      perfumeName,
+      uri,
+      price,
+      concentration,
+      description,
+      ingredients,
+      volume,
+      targetAudience,
+      brand: brandIdOrName,
+      // Trường cũ fallback
+      name,
+      gender,
+      brand,
+    } = req.body;
+
     const image = req.file
-  ? '/uploads/perfumes/' + req.file.filename
-  : '/images/default_perfume.jpg';
+      ? '/uploads/perfumes/' + req.file.filename
+      : '/images/default_perfume.jpg';
+
+    // Map brand: nếu form gửi id thì lấy tên brand, nếu gửi tên thì dùng luôn
+    let brandName = brand || brandIdOrName || '';
+    if (brandName && brandName.match(/^[0-9a-fA-F]{24}$/)) {
+      const brandDoc = await Brand.findById(brandName).lean();
+      brandName = brandDoc ? brandDoc.name : brandName;
+    }
+
+    // Map targetAudience -> gender nếu cần
+    let genderValue = gender;
+    if (!genderValue && targetAudience) {
+      genderValue = targetAudience === 'male' ? 'Nam' : targetAudience === 'female' ? 'Nữ' : 'Unisex';
+    }
 
     const perfume = new Perfume({
-      name,
-      brand,
+      // cũ
+      name: name || perfumeName, // ưu tiên name nếu có, không thì lấy perfumeName
+      brand: brandName,
       price,
       description,
-      gender,
+      gender: genderValue,
       image,
+      // mới
+      perfumeName,
+      uri,
+      concentration,
+      ingredients,
+      volume,
+      targetAudience,
     });
     await perfume.save();
     res.redirect('/perfumes');
@@ -86,14 +123,44 @@ exports.showEditForm = async (req, res) => {
   }
 };
 
-// Cập nhật nước hoa (không cho đổi brand)
+// Cập nhật nước hoa (không cho đổi brand id, nhưng cho đổi tên nếu gửi vào)
 exports.updatePerfume = async (req, res) => {
   if (!req.session.member || req.session.member.role !== "admin") {
     return res.status(403).send("Truy cập bị từ chối");
   }
   try {
-    const { name, price, description, gender } = req.body;
-    const updateData = { name, price, description, gender };
+    const {
+      name,
+      perfumeName,
+      uri,
+      price,
+      description,
+      concentration,
+      ingredients,
+      volume,
+      targetAudience,
+      gender,
+      brand: brandIdOrName,
+    } = req.body;
+
+    const updateData = {
+      name: name || perfumeName,
+      perfumeName,
+      uri,
+      price,
+      description,
+      concentration,
+      ingredients,
+      volume,
+      targetAudience,
+      gender,
+    };
+
+    // Nếu gửi brand dạng tên thì cho phép đổi tên brand; nếu là id thì bỏ qua (không đổi)
+    if (brandIdOrName && !brandIdOrName.match(/^[0-9a-fA-F]{24}$/)) {
+      updateData.brand = brandIdOrName;
+    }
+
     if (req.file)
         updateData.image = '/uploads/perfumes/' + req.file.filename;
 

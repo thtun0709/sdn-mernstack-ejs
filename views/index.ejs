@@ -70,6 +70,7 @@
     }
 
     .perfume-card {
+      position: relative;
       background: #151515;
       border: 1px solid #222;
       border-radius: 10px;
@@ -102,6 +103,22 @@
       color: #aaa;
       font-size: 14px;
     }
+
+
+    .perfume-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #c41e3a, #ff4d6d);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  z-index: 2;
+}
 
     .perfume-price {
       color: #c41e3a;
@@ -327,8 +344,8 @@
     <div class="featured-grid">
       <% perfumes.slice(0, 4).forEach(p => { %>
         <div class="featured-card">
-          <img src="<%= p.image %>" alt="<%= p.name %>">
-          <h3><%= p.name %></h3>
+          <img src="<%= p.image %>" alt="<%= (p.perfumeName || p.name) %>">
+          <h3><%= (p.perfumeName || p.name) %></h3>
           <p><%= p.price.toLocaleString() %> VND</p>
         </div>
       <% }) %>
@@ -380,12 +397,18 @@
       <p style="text-align:center;">No perfumes available!</p>
     <% } else { %>
       <div class="perfume-grid">
-        <% perfumes.forEach(perfume=> { %>
+        <% perfumes.forEach(perfume => { %>
           <div class="perfume-card">
-            <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
-            <h3><%= perfume.name %></h3>
-            <p>Brand: <%= perfume.brand %></p>
-            <p>Gender: <%= perfume.gender %></p>
+            
+            <!-- 🔥 Tag Extrait -->
+            <% if (perfume.concentration && perfume.concentration.toLowerCase() === 'extrait') { %>
+              <div class="perfume-tag">Extrait</div>
+            <% } %>
+  
+            <img src="<%= perfume.image %>" alt="<%= perfume.perfumeName || perfume.name %>">
+            <h3><%= perfume.perfumeName || perfume.name %></h3>
+            <p>Brand: <%= (perfume.brand && (perfume.brand.brandName || perfume.brand.name)) || perfume.brand || '—' %></p>
+            <p>Target: <%= perfume.targetAudience || perfume.gender || '—' %></p>
             <p class="perfume-price"><%= perfume.price.toLocaleString() %> VND</p>
             <div class="center-btn">
               <a href="/perfumes/<%= perfume._id %>" class="btn">View Details</a>

@@ -16,8 +16,9 @@
 
     .container {
       width: 95%;
-      max-width: 1300px;
-      margin: 40px auto;
+      max-width: 1500px;
+      margin-left: 250px;
+      margin-top: 120px;
     }
 
     h1 {
@@ -36,7 +37,7 @@
 
     .list-header {
       display: grid;
-      grid-template-columns: 120px 1.5fr 1fr 2fr 1fr 1fr;
+      grid-template-columns: 120px 1.5fr 2fr 2fr 2fr 2fr 2fr 2fr;
       background: #202020;
       padding: 12px 15px;
       border-bottom: 2px solid #c41e3a;
@@ -47,7 +48,7 @@
 
     .perfume-row {
       display: grid;
-      grid-template-columns: 120px 1.5fr 1fr 2fr 1fr 1fr;
+      grid-template-columns: 120px 1.5fr 2fr 2fr 2fr 2fr 2fr 2fr;
       align-items: center;
       background: #151515;
       border-bottom: 1px solid #333;
@@ -147,7 +148,9 @@
       <div class="list-header">
         <span>Image</span>
         <span>Name</span>
-        <span>Branch</span>
+        <span>Brand</span>
+        <span>Concentration</span>
+        <span>Volume</span>
         <span>Description</span>
         <span>Price</span>
         <span>Action</span>
@@ -158,8 +161,10 @@
           <div class="perfume-image">
             <img src="<%= perfume.image || '/images/no-image.png' %>" alt="<%= perfume.name %>">
           </div>
-          <div><%= perfume.name %></div>
-          <div><%= perfume.brand %></div>
+          <div><%= (perfume.perfumeName || perfume.name) %></div>
+          <div><%= (perfume.brand && (perfume.brand.brandName || perfume.brand.name)) || perfume.brand || '—' %></div>
+          <div><%= perfume.concentration || '—' %></div>
+          <div><%= perfume.volume ? (perfume.volume + ' ml') : '—' %></div>
           <div class="perfume-description"><%= perfume.description || 'No description' %></div>
           <div class="perfume-price"><%= perfume.price.toLocaleString() %> VND</div>
           <div class="perfume-actions">

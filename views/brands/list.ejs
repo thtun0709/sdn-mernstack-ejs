@@ -17,20 +17,47 @@
 
     .container {
       width: 95%;
-      max-width: 1300px;
-      margin: 40px auto;
+      max-width: 1500px;
+      margin-left: 250px;
+      margin-top: 120px;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       font-weight: 600;
       letter-spacing: 1px;
+      position: relative;
+    }
+
+    /* --- Nút Add New Brand --- */
+    .add-brand-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .btn-add {
+      background: #c41e3a;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+
+    .btn-add:hover {
+      background: #a0142e;
     }
 
     .brand-list {
       width: 100%;
-      margin-top: 30px;
+      margin-top: 10px;
       color: #fff;
       border-collapse: collapse;
     }
@@ -121,6 +148,10 @@
         grid-template-columns: 1fr 1fr 1fr;
         font-size: 13px;
       }
+
+      .add-brand-container {
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -129,17 +160,25 @@
   <%- include('../partials/admindashboard') %>
 
   <div class="container">
-    <h1>Quản lý <span style="color:#c41e3a;">Thương hiệu</span></h1>
+    <h1>Manage <span style="color:#c41e3a;">Brand</span></h1>
+
+    <% if (member && member.role === 'admin') { %>
+      <div class="add-brand-container">
+        <a href="/brands/add" class="btn-add">
+          <i class="fa-solid fa-plus"></i> Add New Brand
+        </a>
+      </div>
+    <% } %>
 
     <% if (brands && brands.length > 0) { %>
       <div class="brand-list">
         <div class="list-header">
-          <span>Tên thương hiệu</span>
-          <span>Quốc gia</span>
-          <span>Năm thành lập</span>
+          <span>Brand Name</span>
+          <span>Country</span>
+          <span>Founded Year</span>
           <span>Website</span>
-          <span>Mô tả</span>
-          <span>Hành động</span>
+          <span>Description</span>
+          <span>Action</span>
         </div>
 
         <% brands.forEach(brand => { %>
@@ -149,31 +188,31 @@
             <div><%= brand.foundedYear || '-' %></div>
             <div>
               <% if (brand.website) { %>
-                <a href="<%= brand.website %>" 
-                   target="_blank" 
-                   class="brand-link" 
+                <a href="<%= brand.website %>"
+                   target="_blank"
+                   class="brand-link"
                    title="<%= brand.website %>">
                   <%= brand.website %>
                 </a>
               <% } else { %> - <% } %>
             </div>
             <div>
-              <%= brand.description 
-                    ? brand.description.substring(0, 60) + (brand.description.length > 60 ? '...' : '') 
+              <%= brand.description
+                    ? brand.description.substring(0, 60) + (brand.description.length > 60 ? '...' : '')
                     : '-' %>
             </div>
             <div class="brand-actions">
-              <a href="/brands/<%= brand._id %>" class="btn-icon" title="Xem chi tiết">
+              <a href="/brands/<%= brand._id %>" class="btn-icon" title="View Detail">
                 <i class="fa-solid fa-eye"></i>
               </a>
               <% if (member && member.role === 'admin') { %>
-                <a href="/brands/<%= brand._id %>/edit" class="btn-icon btn-edit" title="Sửa">
+                <a href="/brands/<%= brand._id %>/edit" class="btn-icon btn-edit" title="Edit">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </a>
                 <a href="/brands/<%= brand._id %>/delete"
                    class="btn-icon btn-delete"
-                   onclick="return confirm('Bạn có chắc chắn muốn xóa thương hiệu này?')"
-                   title="Xóa">
+                   onclick="return confirm('Are you sure you want to delete this brand?')"
+                   title="Delete">
                   <i class="fa-solid fa-trash"></i>
                 </a>
               <% } %>
@@ -182,7 +221,7 @@
         <% }) %>
       </div>
     <% } else { %>
-      <p class="no-data">Chưa có thương hiệu nào được thêm.</p>
+      <p class="no-data">No brand has been added.</p>
     <% } %>
   </div>
 </body>

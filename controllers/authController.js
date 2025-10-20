@@ -113,6 +113,7 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) console.error("Lỗi khi đăng xuất:", err);
+    res.clearCookie('connect.sid'); // 🧹 xóa cookie session trên trình duyệt
     res.redirect("/login");
   });
 };

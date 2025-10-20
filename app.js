@@ -112,6 +112,11 @@ app.use("/comments", commentRouter);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server chạy tại http://localhost:${PORT}`));
 
-
+app.use((req, res, next) => {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+    next();
+  });
 
 

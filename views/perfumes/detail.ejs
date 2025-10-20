@@ -24,12 +24,13 @@
     .detail {
       display: flex;
       gap: 40px;
+      grid-template-columns: repeat(4, 1fr);
       flex-wrap: wrap;
       align-items: flex-start;
     }
 
     .detail img {
-      width: 380px;
+      width: 450px;
       border-radius: 10px;
       object-fit: cover;
       border: 1px solid #2a2a2a;
@@ -112,7 +113,9 @@
       cursor: pointer;
       text-decoration: none;
     }
-
+    .price {
+      font-color: #c41e3a;
+    }
     .comment-actions a:hover { text-decoration: underline; }
 
     .edit-form { display: none; margin-top: 10px; }
@@ -125,22 +128,29 @@
   <div class="container">
     <!-- Chi tiết nước hoa -->
     <div class="detail">
-      <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
+      <img src="<%= perfume.image %>" alt="<%= (perfume.perfumeName || perfume.name) %>" width="1200 px" height="720 px">
       <div class="info">
-        <h1><%= perfume.name %></h1>
-        <p><b>Brand:</b> <%= perfume.brand %></p>
-        <p><b>Gender:</b> <%= perfume.gender %></p>
-        <p class="price"><%= perfume.price.toLocaleString() %> VND</p>
+        <h1><%= (perfume.perfumeName || perfume.name) %></h1>
+        <p><b>Brand:</b> <%= (perfume.brand && (perfume.brand.brandName || perfume.brand.name)) || perfume.brand || '—' %></p>
+        <p><b>URI:</b> <%= perfume.uri || '—' %></p>
+        <p><b>Concentration:</b> <%= perfume.concentration || '—' %></p>
+        <p><b>Volume:</b> <%= perfume.volume ? (perfume.volume + ' ml') : '—' %></p>
+        <p><b>Target:</b> <%= perfume.targetAudience || perfume.gender || '—' %></p>
+        <p class="price"><b>Price:</b> <%= perfume.price.toLocaleString() %> VND</p>
         <p><%= perfume.description || "No description for this product." %></p>
+        <% if (perfume.ingredients) { %>
+          <p><b>Ingredients:</b> <%= perfume.ingredients %></p>
+        <% } %>
 
-        <div class="rating">
-          <% if (typeof ratingsCount !== 'undefined' && ratingsCount > 0) { %>
-            ⭐ Trung bình: <%= avgRating.toFixed(1) %>/3 (từ <%= ratingsCount %> đánh giá)
-          <% } else { %>
-            ⭐ Trung bình: Chưa có
-          <% } %>
-        </div>
       </div>
+    </div>
+
+    <div class="rating">
+      <% if (typeof ratingsCount !== 'undefined' && ratingsCount > 0) { %>
+        ⭐ Rating: <%= avgRating.toFixed(1) %>/3 (from <%= ratingsCount %> reviews)
+      <% } else { %>
+        ⭐ Rating: Not Yet
+      <% } %>
     </div>
 
     <!-- Bình luận -->
@@ -149,29 +159,29 @@
 
       <% if (member) { %>
         <form class="comment-form" action="/perfumes/<%= perfume._id %>/comment" method="POST">
-          <label>Đánh giá (1–3 sao):</label>
+          <label>Rating ( 1–3 ⭐):</label>
           <select name="rating" required>
             <option value="1">⭐ 1</option>
             <option value="2">⭐⭐ 2</option>
             <option value="3">⭐⭐⭐ 3</option>
           </select>
-          <textarea name="content" rows="3" placeholder="Viết bình luận..." required></textarea>
+          <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
           <button type="submit">Gửi</button>
         </form>
       <% } else { %>
-        <p><a href="/login?redirect=/perfumes/<%= perfume._id %>#comments" class="login-link">Đăng nhập</a> để bình luận.</p>
+        <p><a href="/login?redirect=/perfumes/<%= perfume._id %>#comments" class="login-link">Login</a> to comment.</p>
       <% } %>
 
       <% if (comments && comments.length > 0) { %>
         <% comments.forEach(c => { %>
           <div class="comment" id="comment-<%= c._id %>">
             <p><%= c.content %></p>
-            <p>Đánh giá: <%= c.rating %> ⭐</p>
+            <p>Rating: <%= c.rating %> ⭐</p>
             <small>👤 <%= c.userId.name %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
 
             <% if (member && (member._id.toString() === c.userId._id.toString() || member.role === 'admin')) { %>
               <div class="comment-actions">
-                <a href="/comments/delete/<%= c._id %>" onclick="return confirm('Xóa bình luận này?')">🗑 Xóa</a>
+                <a href="/comments/delete/<%= c._id %>" onclick="return confirm('Delete this comment?')">🗑 Delete</a>
                 <a class="edit-link" data-id="<%= c._id %>">✏️ Sửa</a>
               </div>
 
@@ -183,13 +193,13 @@
                   <option value="2" <%= c.rating === 2 ? 'selected' : '' %>>⭐⭐ 2</option>
                   <option value="3" <%= c.rating === 3 ? 'selected' : '' %>>⭐⭐⭐ 3</option>
                 </select>
-                <button type="submit">💾 Cập nhật</button>
+                <button type="submit">💾 Update</button>
               </form>
             <% } %>
           </div>
         <% }) %>
       <% } else { %>
-        <p>Chưa có bình luận nào.</p>
+        <p>No comments yet.</p>
       <% } %>
     </div>
   </div>
