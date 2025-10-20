@@ -88,7 +88,22 @@
       transition: 0.3s;
     }
 
-
+    .actions {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .btn {
+      background: #c41e3a;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .btn:hover { background: #a0142e; }
 
     .btn-save {
       background: #c41e3a;
@@ -123,10 +138,18 @@
         <label>Name</label> 
         <input type="text" name="name" value="<%= perfume ? perfume.name : '' %>" required />
 
-        <label>Brand</label>
-        <input type="text" name="brand" value="<%= perfume ? perfume.brand : '' %>" <%=perfume ? 'readonly' : '' %>
-        required
-        />
+        <% if (!perfume) { %>
+          <label>Brand</label>
+          <select name="brand" required>
+            <option value="">-- Chọn thương hiệu --</option>
+            <% (brands || []).forEach(function(b){ %>
+              <option value="<%= b.name %>"><%= b.name %></option>
+            <% }) %>
+          </select>
+        <% } else { %>
+          <!-- Ẩn brand khi edit -->
+          <input type="hidden" name="brand" value="<%= perfume.brand %>" />
+        <% } %>
 
 
         <label>Price (VND)</label>

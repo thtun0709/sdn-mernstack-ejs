@@ -10,10 +10,9 @@ console.log("isAdmin:", typeof isAdmin);
 console.log("upload:", typeof upload);
 console.log("addPerfume:", typeof perfumeController.addPerfume);
 
-// ------------------------
-// 🔹 Admin routes
-// ------------------------
-router.get("/", perfumeController.getAllPerfumes);
+// Admin routes
+
+router.get("/",isAdmin, perfumeController.getAllPerfumes);
 
 router.get("/add", isAdmin, perfumeController.showAddForm);
 router.post("/add", isAdmin, upload.single("image"), perfumeController.addPerfume);
@@ -23,14 +22,16 @@ router.post("/edit/:id", isAdmin, upload.single("image"), perfumeController.upda
 
 router.get("/delete/:id", isAdmin, perfumeController.deletePerfume);
 
-// ------------------------
-// 🔹 User & Public routes
-// ------------------------
 
 // Xem chi tiết nước hoa
 router.get("/:id", perfumeController.getPerfumeDetail);
 
-// Thêm bình luận
+//bình luận
 router.post("/:id/comment", isAuthenticated, commentController.addComment);
 
+//rating
+router.post("/:id/rate", isAuthenticated, perfumeController.addRating);
+
+
+router.post("/comment/edit/:id", commentController.editComment);
 module.exports = router;

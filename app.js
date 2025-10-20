@@ -61,8 +61,12 @@ app.use("/", authRoutes);
 const perfumeRouter = require('./router/perfumeRouter');
 app.use('/perfumes', perfumeRouter);
 
+const brandRouter = require('./router/brandRouter');
+app.use('/brands', brandRouter);
+
 
 const Perfume = require('./models/perfumeModel');
+const Brand = require('./models/brandModel');
 app.get('/', async (req, res) => {
     try {
         const { search, brand, gender, sort } = req.query;
@@ -76,7 +80,8 @@ app.get('/', async (req, res) => {
         if (sort === 'desc') sortOption = { price: -1 };
 
         const perfumes = await Perfume.find(filter).sort(sortOption);
-        const brands = await Perfume.distinct('brand');
+        const brandDocs = await Brand.find({}, 'name').sort({ name: 1 });
+        const brands = brandDocs.map(b => b.name);
 
         res.render('index', {
             title: 'Perfume House',

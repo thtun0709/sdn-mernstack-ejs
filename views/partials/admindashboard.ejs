@@ -2,11 +2,12 @@
 <div class="admin-dashboard">
     <h2 class="logo">
       <a href="/perfumes" style="color: #fff; text-decoration: none;">Admin Panel</a>
-      <span>Hello, <b><%= member.name %></b></span>
+      <span>Hello, <b><%= (typeof member !== 'undefined' && member && member.name) ? member.name : 'Admin' %></b></span>
     </h2>
   
     <ul class="menu">
       <li><a href="/perfumes">📦 Manage Perfumes</a></li>
+      <li><a href="/brands">🏷️ Manage Brands</a></li>
       <li><a href="/users">👥 Manage Users</a></li>
       <li><a href="/logout">🚪 Log out</a></li>
     </ul>

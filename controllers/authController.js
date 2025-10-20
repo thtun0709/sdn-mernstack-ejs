@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password, redirect } = req.body;
 
-    // 🔍 Tìm người dùng
+    // Tìm người dùng
     const member = await Member.findOne({ email });
     if (!member) {
       return res.render("login", {
@@ -70,7 +70,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // 🔑 Kiểm tra mật khẩu
+    // Kiểm tra mật khẩu
     const isMatch = await member.matchPassword(password);
     if (!isMatch) {
       return res.render("login", {
@@ -80,7 +80,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // 💾 Lưu session
+    // Lưu session
     req.session.member = {
       _id: member._id,
       name: member.name,
@@ -88,12 +88,12 @@ exports.login = async (req, res) => {
       role: member.role,
     };
 
-    // ⚙️ Nếu là admin => luôn vào trang quản lý
+    //Nếu là admin => luôn vào trang quản lý
     if (member.role === "admin") {
       return res.redirect("/perfumes");
     }
 
-    // 👤 Nếu là member => ưu tiên redirect (nếu có), không thì về trang chủ
+    // Nếu là member => ưu tiên redirect (nếu có), không thì về trang chủ
     if (redirect && redirect !== "") {
       return res.redirect(redirect);
     } else {

@@ -30,6 +30,17 @@ const perfumeSchema = new mongoose.Schema(
       enum: ["Nam", "Nữ", "Unisex"],
       default: "Unisex",
     },
+    ratings: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" },
+        stars: {
+          type: Number,
+          min: 1,
+          max: 3,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -40,5 +51,12 @@ perfumeSchema.pre("save", function (next) {
   if (this.brand) this.brand = this.brand.trim();
   next();
 });
+
+perfumeSchema.methods.getAverageRating = function () {
+  if (!this.ratings || this.ratings.length === 0) return 0;
+  const sum = this.ratings.reduce((acc, r) => acc + r.stars, 0);
+  return sum / this.ratings.length;
+};
+
 
 module.exports = mongoose.model("Perfume", perfumeSchema);

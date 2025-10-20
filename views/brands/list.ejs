@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    body {
+      background-color: #0c0c0c;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1300px;
+      margin: 40px auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .brand-list {
+      width: 100%;
+      margin-top: 30px;
+      color: #fff;
+      border-collapse: collapse;
+    }
+
+    .list-header {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1fr 1.6fr 2fr 1fr;
+      background: #202020;
+      padding: 12px 15px;
+      border-bottom: 2px solid #c41e3a;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .brand-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1fr 1.6fr 2fr 1fr;
+      align-items: center;
+      background: #151515;
+      border-bottom: 1px solid #333;
+      padding: 10px 15px;
+      transition: background 0.3s ease;
+    }
+
+    .brand-row:hover {
+      background: #1e1e1e;
+    }
+
+    /* --- Căn chỉnh chữ đều và chống lệch layout --- */
+    .brand-row div, .list-header span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* --- Rút gọn đường link website với tooltip --- */
+    a.brand-link {
+      display: inline-block;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #c41e3a;
+      text-decoration: none;
+      vertical-align: middle;
+    }
+
+    a.brand-link:hover {
+      text-decoration: underline;
+    }
+
+    .brand-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      color: #fff;
+      background: #c41e3a;
+      padding: 8px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.3s;
+      font-size: 15px;
+    }
+
+    .btn-icon:hover {
+      background: #a0142e;
+    }
+
+    .btn-edit { background: #1a5f7a; }
+    .btn-edit:hover { background: #207398; }
+
+    .btn-delete { background: #700; }
+    .btn-delete:hover { background: #a00; }
+
+    .no-data {
+      text-align: center;
+      color: #aaa;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .list-header, .brand-row {
+        grid-template-columns: 1fr 1fr 1fr;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/admindashboard') %>
+
+  <div class="container">
+    <h1>Quản lý <span style="color:#c41e3a;">Thương hiệu</span></h1>
+
+    <% if (brands && brands.length > 0) { %>
+      <div class="brand-list">
+        <div class="list-header">
+          <span>Tên thương hiệu</span>
+          <span>Quốc gia</span>
+          <span>Năm thành lập</span>
+          <span>Website</span>
+          <span>Mô tả</span>
+          <span>Hành động</span>
+        </div>
+
+        <% brands.forEach(brand => { %>
+          <div class="brand-row">
+            <div><%= brand.name %></div>
+            <div><%= brand.country || '-' %></div>
+            <div><%= brand.foundedYear || '-' %></div>
+            <div>
+              <% if (brand.website) { %>
+                <a href="<%= brand.website %>" 
+                   target="_blank" 
+                   class="brand-link" 
+                   title="<%= brand.website %>">
+                  <%= brand.website %>
+                </a>
+              <% } else { %> - <% } %>
+            </div>
+            <div>
+              <%= brand.description 
+                    ? brand.description.substring(0, 60) + (brand.description.length > 60 ? '...' : '') 
+                    : '-' %>
+            </div>
+            <div class="brand-actions">
+              <a href="/brands/<%= brand._id %>" class="btn-icon" title="Xem chi tiết">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <% if (member && member.role === 'admin') { %>
+                <a href="/brands/<%= brand._id %>/edit" class="btn-icon btn-edit" title="Sửa">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <a href="/brands/<%= brand._id %>/delete"
+                   class="btn-icon btn-delete"
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa thương hiệu này?')"
+                   title="Xóa">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="no-data">Chưa có thương hiệu nào được thêm.</p>
+    <% } %>
+  </div>
+</body>
+</html>

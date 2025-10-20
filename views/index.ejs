@@ -208,7 +208,7 @@
       background: #a0142e;
     }
 
-    /* --- Thương hiệu nổi bật --- */
+    /* Thương hiệu nổi bật*/
     .brands {
       text-align: center;
       padding: 60px 0;
@@ -294,13 +294,13 @@
 <body>
   <%- include('partials/header') %>
 
-  <!-- 🔹 Banner -->
+  <!-- Banner -->
   <div class="hero">
     <h1>Perfume <span style="color:#0e0707;">House</span></h1>
     <p>Where the most exquisite fragrances converge, honoring your unique style.</p>
   </div>
 
-  <!-- 🔹 Giới thiệu -->
+  <!--Giới thiệu -->
   <div class="intro">
     <p>
       Welcome to Perfume House – the world of the most exquisite fragrances.
@@ -309,7 +309,7 @@
     </p>
   </div>
 
-  <!-- 🔹 Thương hiệu nổi bật -->
+  <!--Thương hiệu nổi bật -->
   <section class="brands">
     <h2>Featured Brands</h2>
     <div class="brand-logos">
@@ -325,7 +325,7 @@
   <section class="featured">
     <h2>Featured Collection</h2>
     <div class="featured-grid">
-      <% perfumes.slice(0, 3).forEach(p => { %>
+      <% perfumes.slice(0, 4).forEach(p => { %>
         <div class="featured-card">
           <img src="<%= p.image %>" alt="<%= p.name %>">
           <h3><%= p.name %></h3>

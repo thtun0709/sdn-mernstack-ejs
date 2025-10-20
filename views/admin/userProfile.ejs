@@ -115,15 +115,15 @@
             // chuẩn hoá giá trị gender để hiển thị
             let g = user.gender;
             if (typeof g === 'boolean') {
-              g = g ? 'Nam' : 'Nữ';
+              g = g ? 'Male' : 'Female';
             } else if (!g || g === 'null') {
               g = 'Không rõ';
             }
           %>
       
-          <% if (g === 'Nam') { %>
+          <% if (g === 'Male') { %>
             <i class="fa-solid fa-mars" style="color:#1e90ff;"></i> <%= g %>
-          <% } else if (g === 'Nữ') { %>
+          <% } else if (g === 'Female') { %>
             <i class="fa-solid fa-venus" style="color:#ff69b4;"></i> <%= g %>
           <% } else { %>
             <i class="fa-solid fa-venus-mars" style="color:#c41e3a;"></i> <%= g %>
@@ -145,12 +145,12 @@
     <div class="info-item">
       <label>Status</label>
       <span class="status <%= user.isActive ? 'active' : 'locked' %>">
-        <%= user.isActive ? 'Hoạt động' : 'Bị khóa' %>
+        <%= user.isActive ? 'Active' : 'Locked' %>
       </span>
     </div>
 
     <a href="/users" class="back-btn">
-      <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+      <i class="fa-solid fa-arrow-left"></i> Back to user list
     </a>
   </div>
 </body>

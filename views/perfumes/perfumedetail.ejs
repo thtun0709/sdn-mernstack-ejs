@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
-  <title><%= perfume.name %> - Chi tiết nước hoa</title>
+  <title>
+    <%= perfume.name %> - Chi tiết nước hoa
+  </title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -13,9 +16,12 @@
       margin: 0;
       padding: 0;
     }
-
-    .container {
-      margin-top:200px;
+    .page-container {
+      margin-left: 200px;
+    }
+    .perfume-container {
+      margin-left: 200px;
+      margin-top: 200px;
       max-width: 900px;
       background: #151515;
       padding: 30px;
@@ -78,32 +84,49 @@
       transition: 0.3s;
     }
 
-    .btn:hover { background: #a0142e; }
+    .btn:hover {
+      background: #a0142e;
+    }
   </style>
 </head>
+
 <body>
-    <%- include('../partials/admindashboard') %>
+  <%- include('../partials/admindashboard') %>
 
-  <div class="container">
-    <div class="perfume-detail">
-      <img src="<%= perfume.image || '/images/no-image.png' %>" alt="<%= perfume.name %>">
+    <div class="page-container">
+      <div class="perfume-container">
+        <div class="perfume-detail">
+          <img src="<%= perfume.image || '/images/no-image.png' %>" alt="<%= perfume.name %>">
 
-      <div class="info">
-        <h2><%= perfume.name %></h2>
-        <p><strong>Brand:</strong> <%= perfume.brand %></p>
-        <p><strong>Gender:</strong> <%= perfume.gender %></p>
-        <p><strong>Description:</strong> <%= perfume.description || 'No description' %></p>
-        <p class="price"><%= perfume.price.toLocaleString() %> VND</p>
+          <div class="info">
+            <h2>
+              <%= perfume.name %>
+            </h2>
+            <p><strong>Brand:</strong>
+              <%= perfume.brand %>
+            </p>
+            <p><strong>Gender:</strong>
+              <%= perfume.gender %>
+            </p>
+            <p><strong>Description:</strong>
+              <%= perfume.description || 'No description' %>
+            </p>
+            <p class="price">
+              <%= perfume.price.toLocaleString() %> VND
+            </p>
 
-        <div class="actions">
-          <a href="/perfumes/edit/<%= perfume._id %>" class="btn"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
-          <a href="/perfumes/delete/<%= perfume._id %>" class="btn" style="background:#700;"><i class="fa-solid fa-trash"></i> Delete</a>
-          <a href="/perfumes" class="btn" style="background:#333;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <div class="actions">
+              <a href="/perfumes/edit/<%= perfume._id %>" class="btn"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+              <a href="/perfumes/delete/<%= perfume._id %>" class="btn" style="background:#700;"><i
+                  class="fa-solid fa-trash"></i> Delete</a>
+              <a href="/perfumes" class="btn" style="background:#333;"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  
+
 </body>
+
 </html>
