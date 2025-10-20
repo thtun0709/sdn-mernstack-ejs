@@ -211,6 +211,7 @@
       </div>
 
       <% users.forEach(u => { %>
+        <% if (u.role !== 'admin') { %>
         <div class="user-row" id="user-<%= u._id %>">
           <div><%= u.name %></div>
           <div><%= u.email %></div>
@@ -235,6 +236,7 @@
             </a>
           </div>
         </div>
+        <% } %>
       <% }) %>
     </div>
   </div>
