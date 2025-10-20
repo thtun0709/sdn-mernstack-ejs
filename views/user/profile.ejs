@@ -88,23 +88,23 @@
     <%- include('../partials/header') %>
 
     <div class="profile-container">
-      <h1>Thông tin cá nhân</h1>
+      <h1>Profile Information</h1>
       <form action="/users/profile/update" method="POST">
-        <label>Tên hiển thị</label>
+        <label>Display name</label>
         <input type="text" name="name" value="<%= user.name %>" required />
 
         <label>Email</label>
         <input type="email" name="email" value="<%= user.email %>" required />
 
-        <label>Mật khẩu (để trống nếu không đổi)</label>
+        <label>Password (leave empty if you don't want to change)</label>
         <input type="password" name="password" placeholder="••••••••" />
 
         <div class="btn-container">
           <button type="submit" class="btn btn-save">
-            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+            <i class="fa-solid fa-floppy-disk"></i> Save changes
           </button>
           <a href="/" class="btn btn-back">
-            <i class="fa-solid fa-arrow-left"></i> Quay lại
+            <i class="fa-solid fa-arrow-left"></i> Back
           </a>
         </div>
       </form>

@@ -6,29 +6,29 @@
 <body>
     <%- include('../partials/admindashboard') %>
 
-  <h2>Thêm nước hoa mới</h2>
+  <h2>Add new Perfume</h2>
 
   <% if (error) { %>
     <p style="color:red;"><%= error %></p>
   <% } %>
 
   <form action="/perfumes/add" method="POST" enctype="multipart/form-data">
-    <label>Tên:</label>
+    <label>Name:</label>
     <input type="text" name="name" required><br>
 
-    <label>Thương hiệu:</label>
+    <label>Brand:</label>
     <input type="text" name="brand"><br>
 
-    <label>Giá:</label>
+    <label>Price:</label>
     <input type="number" name="price" step="0.01"><br>
 
-    <label>Mô tả:</label>
+    <label>Description:</label>
     <textarea name="description"></textarea><br>
 
-    <label>Ảnh:</label>
+    <label>Image:</label>
     <input type="file" name="image" accept="image/*"><br><br>
 
-    <button type="submit">Thêm</button>
+    <button type="submit">Add</button>
   </form>
 
 </body>

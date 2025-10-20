@@ -5,7 +5,6 @@
   <title><%= perfume.name %></title>
   <link rel="stylesheet" href="/css/style.css" />
   <style>
-    /* === Tổng thể === */
     body {
       background: #0c0c0c;
       color: #fff;
@@ -21,7 +20,7 @@
       margin: 50px auto;
     }
   
-    /* === Phần chi tiết sản phẩm === */
+    /*chi tiết sản phẩm*/
     .detail {
       display: flex;
       gap: 40px;
@@ -60,7 +59,7 @@
       margin: 15px 0;
     }
   
-    /* === Bình luận === */
+    /*Bình luận */
     .comment-section {
       margin-top: 60px;
     }
@@ -125,7 +124,7 @@
       text-decoration: underline;
     }
   
-    /* === Responsive === */
+    /*Responsive */
     @media (max-width: 768px) {
       .detail {
         flex-direction: column;
@@ -146,26 +145,26 @@
   <%- include('../partials/header') %>
   
   <div class="container">
-    <!-- Chi tiết nước hoa -->
+    <!--Chi tiết nước hoa -->
     <div class="detail">
       <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
       <div class="info">
         <h1><%= perfume.name %></h1>
-        <p><b>Thương hiệu:</b> <%= perfume.brand %></p>
-        <p><b>Giới tính:</b> <%= perfume.gender %></p>
+        <p><b>Brand:</b> <%= perfume.brand %></p>
+        <p><b>Gender:</b> <%= perfume.gender %></p>
         <p class="price"><%= perfume.price.toLocaleString() %> VND</p>
-        <p><%= perfume.description || "Không có mô tả cho sản phẩm này." %></p>
+        <p><%= perfume.description || "No description for this product." %></p>
       </div>
     </div>
 
-    <!-- Bình luận -->
+    <!--Bình luận-->
     <div class="comment-section">
-      <h2>Bình luận</h2>
+      <h2>Comments</h2>
 
       <% if (member) { %>
         <form class="comment-form" action="/perfumes/<%= perfume._id %>/comment" method="POST">
-          <textarea name="content" rows="3" placeholder="Viết bình luận..." required></textarea>
-          <button type="submit">Gửi</button>
+          <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
+          <button type="submit">Send</button>
         </form>
       <% } else { %>
         <p>
@@ -173,8 +172,8 @@
             href="/login?redirect=/perfumes/<%= perfume._id %>#comments" 
             class="login-link"
           >
-            Đăng nhập
-          </a> để bình luận.
+            Login
+          </a> to comment.
         </p>
       <% } %>
 
@@ -184,12 +183,12 @@
             <p><%= c.content %></p>
             <small>👤 <%= c.userId.name %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
             <% if (member && (member._id.toString() === c.userId._id.toString() || member.role === 'admin')) { %>
-              <a href="/comments/delete/<%= c._id %>" style="color:#c41e3a; font-size:13px;" onclick="return confirm('Xóa bình luận này?')">🗑 Xóa</a>
+              <a href="/comments/delete/<%= c._id %>" style="color:#c41e3a; font-size:13px;" onclick="return confirm('Delete this comment?')">🗑 Delete</a>
             <% } %>
           </div>
         <% }) %>
       <% } else { %>
-        <p>Chưa có bình luận nào.</p>
+        <p>No comments yet.</p>
       <% } %>
     </div>
   </div>

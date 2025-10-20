@@ -1,6 +1,7 @@
 const Member = require("../models/memberModel");
+const bcrypt = require("bcryptjs");
 
-// ✅ Hiển thị danh sách người dùng (Admin)
+//Hiển thị danh sách người dùng (Admin)
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await Member.find();
@@ -15,7 +16,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// ✅ Khóa / Mở tài khoản người dùng
+// Khóa / Mở tài khoản người dùng
 exports.toggleUserStatus = async (req, res) => {
   try {
     const user = await Member.findById(req.params.id);
@@ -31,7 +32,7 @@ exports.toggleUserStatus = async (req, res) => {
   }
 };
 
-// ✅ Xóa người dùng
+// Xóa người dùng
 exports.deleteUser = async (req, res) => {
   try {
     await Member.findByIdAndDelete(req.params.id);
@@ -43,7 +44,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 
-// ✅ User - Trang hồ sơ cá nhân
+// User - Trang hồ sơ cá nhân
 exports.getProfile = async (req, res) => {
   try {
     const sessionMember = req.session.member;
@@ -57,8 +58,8 @@ exports.getProfile = async (req, res) => {
 
     res.render("user/profile", {
       title: "Hồ sơ cá nhân",
-      member: sessionMember, // giữ để header hiển thị
-      user, // dữ liệu mới nhất từ DB
+      member: sessionMember, 
+      user, 
     });
   } catch (err) {
     console.error("❌ Lỗi khi lấy thông tin user:", err);
@@ -66,7 +67,7 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-// ✅ User - Cập nhật hồ sơ cá nhân
+// User - Cập nhật hồ sơ cá nhân
 exports.updateProfile = async (req, res) => {
   try {
     const sessionMember = req.session.member;
@@ -93,5 +94,22 @@ exports.updateProfile = async (req, res) => {
   } catch (err) {
     console.error("❌ Lỗi khi cập nhật hồ sơ:", err);
     res.redirect("/users/profile");
+  }
+};
+
+exports.viewUserProfile = async (req, res) => {
+  try {
+    const user = await Member.findById(req.params.id);
+    if (!user) {
+      return res.status(404).send("Không tìm thấy người dùng");
+    }
+
+    res.render("admin/userProfile", {
+      title: `Hồ sơ người dùng - ${user.name}`,
+      user,
+    });
+  } catch (err) {
+    console.error("❌ Lỗi khi xem hồ sơ người dùng:", err);
+    res.status(500).send("Lỗi hệ thống");
   }
 };

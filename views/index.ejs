@@ -296,22 +296,22 @@
 
   <!-- 🔹 Banner -->
   <div class="hero">
-    <h1>Perfume <span style="color:#c41e3a;">House</span></h1>
-    <p>Nơi hội tụ hương thơm đẳng cấp, tôn vinh phong cách riêng của bạn.</p>
+    <h1>Perfume <span style="color:#0e0707;">House</span></h1>
+    <p>Where the most exquisite fragrances converge, honoring your unique style.</p>
   </div>
 
   <!-- 🔹 Giới thiệu -->
   <div class="intro">
     <p>
-      Chào mừng bạn đến với Perfume House – thế giới của những mùi hương tinh tế.
-      Tại đây, chúng tôi mang đến các dòng nước hoa từ thương hiệu nổi tiếng như Chanel, Dior, Gucci, YSL và hơn thế nữa.
-      Hãy tìm kiếm mùi hương phù hợp với cá tính của bạn.
+      Welcome to Perfume House – the world of the most exquisite fragrances.
+      Here, we bring you the finest fragrances from renowned brands like Chanel, Dior, Gucci, YSL and more.
+      Find the fragrance that suits your personality.
     </p>
   </div>
 
   <!-- 🔹 Thương hiệu nổi bật -->
   <section class="brands">
-    <h2>Thương hiệu nổi bật</h2>
+    <h2>Featured Brands</h2>
     <div class="brand-logos">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsHqPoodzyGI9VGHqBDbc-kQx5M2aMSc1_LQ&s" alt="Dior">
       <img src="https://cdn.shopify.com/s/files/1/0775/7363/files/chanel-iconic-cc-logo_480x480.jpg?v=1627421098" alt="Chanel">
@@ -323,7 +323,7 @@
 
   <!-- 🔹 Bộ sưu tập nổi bật -->
   <section class="featured">
-    <h2>Bộ sưu tập nổi bật</h2>
+    <h2>Featured Collection</h2>
     <div class="featured-grid">
       <% perfumes.slice(0, 3).forEach(p => { %>
         <div class="featured-card">
@@ -338,32 +338,32 @@
   <!-- 🔍 SEARCH + FILTER -->
   <form action="/" method="GET" class="search-filter-form">
     <div class="search-row">
-      <input type="text" name="search" placeholder="Tìm theo tên nước hoa..." value="<%= search || '' %>" class="search-input" />
+      <input type="text" name="search" placeholder="Search by perfume name..." value="<%= search || '' %>" class="search-input" />
       <button type="button" class="filter-btn" onclick="toggleFilter()">⚙️</button>
     </div>
 
     <div class="filter-panel" id="filter-panel">
       <select name="brand">
-        <option value="">Tất cả thương hiệu</option>
+        <option value="">All brands</option>
         <% brands.forEach(b=> { %>
           <option value="<%= b %>" <%=brand===b ? 'selected' : '' %>><%= b %></option>
         <% }) %>
       </select>
 
       <select name="gender">
-        <option value="">Tất cả</option>
-        <option value="Nam" <%=gender==='Nam' ? 'selected' : '' %>>Nam</option>
-        <option value="Nữ" <%=gender==='Nữ' ? 'selected' : '' %>>Nữ</option>
+        <option value="">All</option>
+        <option value="Nam" <%=gender==='Nam' ? 'selected' : '' %>>Male</option>
+        <option value="Nữ" <%=gender==='Nữ' ? 'selected' : '' %>>Female</option>
         <option value="Unisex" <%=gender==='Unisex' ? 'selected' : '' %>>Unisex</option>
       </select>
 
       <select name="sort">
-        <option value="">Sắp xếp</option>
-        <option value="asc" <%=sort==='asc' ? 'selected' : '' %>>Giá tăng dần</option>
-        <option value="desc" <%=sort==='desc' ? 'selected' : '' %>>Giá giảm dần</option>
+        <option value="">Sort</option>
+        <option value="asc" <%=sort==='asc' ? 'selected' : '' %>>Price ascending</option>
+        <option value="desc" <%=sort==='desc' ? 'selected' : '' %>>Price descending</option>
       </select>
 
-      <button type="submit" class="apply-filter">Áp dụng</button>
+      <button type="submit" class="apply-filter">Apply</button>
     </div>
   </form>
 
@@ -377,15 +377,15 @@
   <!-- 🔹 Danh sách sản phẩm -->
   <div class="container">
     <% if (!perfumes.length) { %>
-      <p style="text-align:center;">Hiện chưa có sản phẩm nào!</p>
+      <p style="text-align:center;">No perfumes available!</p>
     <% } else { %>
       <div class="perfume-grid">
         <% perfumes.forEach(perfume=> { %>
           <div class="perfume-card">
             <img src="<%= perfume.image %>" alt="<%= perfume.name %>">
             <h3><%= perfume.name %></h3>
-            <p>Thương hiệu: <%= perfume.brand %></p>
-            <p>Giới tính: <%= perfume.gender %></p>
+            <p>Brand: <%= perfume.brand %></p>
+            <p>Gender: <%= perfume.gender %></p>
             <p class="perfume-price"><%= perfume.price.toLocaleString() %> VND</p>
             <div class="center-btn">
               <a href="/perfumes/<%= perfume._id %>" class="btn">View Details</a>

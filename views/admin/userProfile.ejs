@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    body {
+      background: #0c0c0c;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .profile-container {
+      width: 100%;
+      max-width: 600px;
+      background: #151515;
+      border-radius: 12px;
+      padding: 40px 50px;
+      box-shadow: 0 0 25px rgba(196, 30, 58, 0.4);
+      text-align: center;
+      margin-left: 200px;
+    }
+
+    h1 {
+      color: #c41e3a;
+      margin-bottom: 35px;
+      letter-spacing: 1px;
+    }
+
+    .info-item {
+      margin-bottom: 18px;
+      font-size: 16px;
+    }
+
+    .info-item label {
+      display: block;
+      color: #bbb;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .info-item span {
+      color: #fff;
+      font-size: 17px;
+    }
+
+    .status.active {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .status.locked {
+      color: #dc3545;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 30px;
+      background: #333;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .back-btn:hover {
+      background: #444;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .profile-container {
+        padding: 30px 20px;
+      }
+      .info-item {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/admindashboard') %>
+
+  <div class="profile-container">
+    <h1>Hồ sơ người dùng</h1>
+
+    <div class="info-item">
+      <label>Name</label>
+      <span><%= user.name %></span>
+    </div>
+
+    <div class="info-item">
+      <label>Email</label>
+      <span><%= user.email %></span>
+    </div>
+
+    <div class="info-item">
+        <label>Giới tính</label>
+        <span class="gender">
+          <% 
+            // chuẩn hoá giá trị gender để hiển thị
+            let g = user.gender;
+            if (typeof g === 'boolean') {
+              g = g ? 'Nam' : 'Nữ';
+            } else if (!g || g === 'null') {
+              g = 'Không rõ';
+            }
+          %>
+      
+          <% if (g === 'Nam') { %>
+            <i class="fa-solid fa-mars" style="color:#1e90ff;"></i> <%= g %>
+          <% } else if (g === 'Nữ') { %>
+            <i class="fa-solid fa-venus" style="color:#ff69b4;"></i> <%= g %>
+          <% } else { %>
+            <i class="fa-solid fa-venus-mars" style="color:#c41e3a;"></i> <%= g %>
+          <% } %>
+        </span>
+      </div>
+      
+
+    <div class="info-item">
+      <label>YOB</label>
+      <span><%= user.YOB %></span>
+    </div>
+
+    <div class="info-item">
+      <label>Role</label>
+      <span><%= user.role %></span>
+    </div>
+
+    <div class="info-item">
+      <label>Status</label>
+      <span class="status <%= user.isActive ? 'active' : 'locked' %>">
+        <%= user.isActive ? 'Hoạt động' : 'Bị khóa' %>
+      </span>
+    </div>
+
+    <a href="/users" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+    </a>
+  </div>
+</body>
+</html>

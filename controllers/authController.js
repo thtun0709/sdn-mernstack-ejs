@@ -52,6 +52,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password, redirect } = req.body;
 
+    // 🔍 Tìm người dùng
     const member = await Member.findOne({ email });
     if (!member) {
       return res.render("login", {
@@ -61,6 +62,15 @@ exports.login = async (req, res) => {
       });
     }
 
+    if (!member.isActive) {
+      return res.render("login", {
+        error: "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.",
+        title: "Đăng nhập",
+        redirect,
+      });
+    }
+
+    // 🔑 Kiểm tra mật khẩu
     const isMatch = await member.matchPassword(password);
     if (!isMatch) {
       return res.render("login", {
@@ -70,6 +80,7 @@ exports.login = async (req, res) => {
       });
     }
 
+    // 💾 Lưu session
     req.session.member = {
       _id: member._id,
       name: member.name,
@@ -77,14 +88,14 @@ exports.login = async (req, res) => {
       role: member.role,
     };
 
-    // ✅ Nếu có redirect thì quay lại URL cũ
-    if (redirect && redirect !== "") {
-      return res.redirect(redirect);
-    }
-
-    // ✅ Nếu không có redirect, về trang phù hợp
+    // ⚙️ Nếu là admin => luôn vào trang quản lý
     if (member.role === "admin") {
       return res.redirect("/perfumes");
+    }
+
+    // 👤 Nếu là member => ưu tiên redirect (nếu có), không thì về trang chủ
+    if (redirect && redirect !== "") {
+      return res.redirect(redirect);
     } else {
       return res.redirect("/");
     }
@@ -97,6 +108,7 @@ exports.login = async (req, res) => {
     });
   }
 };
+
 // [GET] Đăng xuất
 exports.logout = (req, res) => {
   req.session.destroy((err) => {

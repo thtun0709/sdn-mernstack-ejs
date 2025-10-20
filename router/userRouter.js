@@ -23,4 +23,7 @@ router.get("/profile",  isAuthenticated, isLoggedIn, userController.getProfile);
 // Cập nhật hồ sơ cá nhân
 router.post("/profile/update", isAuthenticated, userController.updateProfile);
 
+// Xem hồ sơ của user (dành cho admin)
+router.get("/profile/:id", isAdmin, userController.viewUserProfile);
+
 module.exports = router;

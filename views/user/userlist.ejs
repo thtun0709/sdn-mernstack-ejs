@@ -102,11 +102,11 @@
     .btn-delete { background: #700; }
     .btn-delete:hover { background: #a00; }
 
-    /* --- Popup overlay (fixed & centered) --- */
+    /* ---Popup overlay (fixed & centered)--- */
     .popup {
       position: fixed;
-      inset: 0; /* top:0; right:0; bottom:0; left:0; */
-      display: none; /* show via JS */
+      inset: 0; 
+      display: none;
       align-items: center;
       justify-content: center;
       background: rgba(0,0,0,0.55);
@@ -115,7 +115,7 @@
       backdrop-filter: blur(2px);
     }
 
-    /* popup visible state helper (if needed) */
+    /*popup visible state helper (if needed) */
     .popup.show { display: flex; }
 
     .popup-content {
@@ -173,7 +173,7 @@
       color: #fff;
     }
 
-    /* close by clicking the X (optional) */
+    /*close by clicking the X (optional) */
     .popup-close {
       position: absolute;
       top: 18px;
@@ -185,7 +185,7 @@
       cursor: pointer;
     }
 
-    /* Responsive */
+    /*Responsive */
     @media (max-width: 480px) {
       .popup-content { padding: 18px; }
       .list-header, .user-row { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
@@ -202,11 +202,11 @@
 
     <div class="user-list">
       <div class="list-header">
-        <span>Tên</span>
+        <span>Name</span>
         <span>Email</span>
-        <span>Quyền</span>
-        <span>Trạng thái</span>
-        <span>Hành động</span>
+        <span>Role</span>
+        <span>Status</span>
+        <span>Action</span>
       </div>
 
       <% users.forEach(u => { %>
@@ -215,9 +215,12 @@
           <div><%= u.email %></div>
           <div><%= u.role %></div>
           <div class="status <%= u.isActive ? 'active' : 'locked' %>">
-            <%= u.isActive ? 'Hoạt động' : 'Bị khóa' %>
+            <%= u.isActive ? 'Active' : 'Locked' %>
           </div>
           <div class="user-actions">
+            <a href="/users/profile/<%= u._id %>" class="btn-icon" style="background:#444;" title="Xem hồ sơ">
+              <i class="fa-solid fa-user"></i>
+            </a>
             <a href="#" class="btn-icon btn-toggle"
                title="Khóa/Mở"
                data-user-id="<%= u._id %>"
@@ -239,11 +242,11 @@
   <div class="popup" id="confirmPopup" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="popup-content" role="document">
       <button class="popup-close" id="popupClose" aria-label="Đóng">&times;</button>
-      <h3 id="popupMessage">Xác nhận</h3>
+      <h3 id="popupMessage">Confirm</h3>
       <div class="popup-text" id="popupSub"></div>
       <div class="popup-buttons">
-        <button class="popup-btn confirm" id="confirmBtn">Xác nhận</button>
-        <button class="popup-btn cancel" id="cancelBtn">Hủy</button>
+        <button class="popup-btn confirm" id="confirmBtn">Confirm</button>
+        <button class="popup-btn cancel" id="cancelBtn">Cancel</button>
       </div>
     </div>
   </div>
@@ -267,11 +270,11 @@
         currentUserId = userId;
         currentIsActive = isActive;
         popupMessage.innerText = isActive
-          ? "Bạn có chắc muốn KHÓA tài khoản này?"
-          : "Bạn có chắc muốn MỞ tài khoản này?";
+          ? "Are you sure you want to LOCK this account?"
+          : "Are you sure you want to UNLOCK this account?";
         popupSub.innerText = isActive
-          ? "Người dùng sẽ không thể đăng nhập sau khi bị khóa."
-          : "Người dùng sẽ có thể đăng nhập lại sau khi được mở khóa.";
+          ? "The user will not be able to login after being locked."
+          : "The user will be able to login again after being unlocked.";
         popup.classList.add('show');
         popup.setAttribute('aria-hidden', 'false');
         // prevent body scroll
