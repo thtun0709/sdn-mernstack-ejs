@@ -12,6 +12,16 @@
       <li><a href="/logout">🚪 Log out</a></li>
     </ul>
   </div>
+
+  <script>
+    // Chặn back ở trang admin
+    if (window.history && window.history.pushState) {
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function () {
+        window.history.pushState(null, "", window.location.href);
+      };
+    }
+  </script>
   
   <style>
     .admin-dashboard {

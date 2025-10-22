@@ -224,5 +224,10 @@
       <p class="no-data">No brand has been added.</p>
     <% } %>
   </div>
+  <script>
+    <% if (typeof error !== 'undefined' && error) { %>
+      alert("<%= error %>");
+    <% } %>
+  </script>
 </body>
 </html>

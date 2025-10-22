@@ -1,8 +1,21 @@
 const Member = require("../models/memberModel");
 const bcrypt = require("bcryptjs");
 
+function disableCache(res) {
+  res.set(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, private, max-age=0"
+  );
+  res.set("Pragma", "no-cache");
+  res.set("Expires", "-1");
+}
 // [GET] Trang đăng ký
 exports.getRegister = (req, res) => {
+  if (req.session.member) {
+    return res.redirect("/");
+  }
+
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   res.render("register", { title: "Đăng ký tài khoản", error: null });
 };
 
@@ -25,12 +38,10 @@ exports.postRegister = async (req, res) => {
       name,
       YOB,
       gender,
-      role: role || "member", 
+      role: role || "member",
     });
 
     await newMember.save();
-
-    // Chuyển hướng sang login
     res.redirect("/login");
   } catch (err) {
     console.error("❌ Lỗi đăng ký:", err);
@@ -43,6 +54,15 @@ exports.postRegister = async (req, res) => {
 
 // [GET] Trang đăng nhập
 exports.getLogin = (req, res) => {
+  if (req.session.member) {
+    if (req.session.member.role === "admin") {
+      return res.redirect("/perfumes");
+    }
+    return res.redirect("/");
+  }
+
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+
   const redirect = req.query.redirect || "/";
   res.render("login", { title: "Đăng nhập", error: null, redirect });
 };
@@ -51,6 +71,11 @@ exports.getLogin = (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password, redirect } = req.body;
+
+    // Nếu có session cũ → xóa trước khi login mới
+    if (req.session.member) {
+      req.session.destroy();
+    }
 
     // Tìm người dùng
     const member = await Member.findOne({ email });
@@ -62,6 +87,7 @@ exports.login = async (req, res) => {
       });
     }
 
+    // Kiểm tra trạng thái tài khoản
     if (!member.isActive) {
       return res.render("login", {
         error: "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.",
@@ -80,7 +106,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Lưu session
+    // ✅ Lưu session
     req.session.member = {
       _id: member._id,
       name: member.name,
@@ -88,12 +114,12 @@ exports.login = async (req, res) => {
       role: member.role,
     };
 
-    //Nếu là admin => luôn vào trang quản lý
+    // ✅ Admin → vào quản lý nước hoa
     if (member.role === "admin") {
       return res.redirect("/perfumes");
     }
 
-    // Nếu là member => ưu tiên redirect (nếu có), không thì về trang chủ
+    // ✅ Member → redirect nếu có, ngược lại về trang chủ
     if (redirect && redirect !== "") {
       return res.redirect(redirect);
     } else {
@@ -113,7 +139,8 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) console.error("Lỗi khi đăng xuất:", err);
-    res.clearCookie('connect.sid'); // 🧹 xóa cookie session trên trình duyệt
+    res.clearCookie("connect.sid"); // 🧹 Xóa cookie session trên trình duyệt
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
     res.redirect("/login");
   });
 };

@@ -132,7 +132,7 @@
       <div class="info">
         <h1><%= (perfume.perfumeName || perfume.name) %></h1>
         <p><b>Brand:</b> <%= (perfume.brand && (perfume.brand.brandName || perfume.brand.name)) || perfume.brand || '—' %></p>
-        <p><b>URI:</b> <%= perfume.uri || '—' %></p>
+        <!-- <p><b>URI:</b> <%= perfume.uri || '—' %></p> -->
         <p><b>Concentration:</b> <%= perfume.concentration || '—' %></p>
         <p><b>Volume:</b> <%= perfume.volume ? (perfume.volume + ' ml') : '—' %></p>
         <p><b>Target:</b> <%= perfume.targetAudience || perfume.gender || '—' %></p>

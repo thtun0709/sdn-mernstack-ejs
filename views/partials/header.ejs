@@ -16,4 +16,13 @@
       <% } %>
     </nav>
   </header>
+
+  <script>
+    // Khi user quay lại trang từ cache (Back/Forward), reload lại để cập nhật session
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        window.location.reload();
+      }
+    });
+  </script>
   
