@@ -411,7 +411,7 @@
             <p>Target: <%= perfume.targetAudience || perfume.gender || '—' %></p>
             <p class="perfume-price"><%= perfume.price.toLocaleString() %> VND</p>
             <div class="center-btn">
-              <a href="/perfumes/<%= perfume._id %>" class="btn">View Details</a>
+              <a href="/perfumes/<%= perfume._id %>?from=home" class="btn">View Details</a>
             </div>
           </div>
         <% }) %>

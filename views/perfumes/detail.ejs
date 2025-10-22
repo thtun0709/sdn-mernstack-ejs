@@ -154,66 +154,68 @@
     </div>
 
     <!-- Bình luận -->
-    <div class="comment-section">
-      <h2>Comments</h2>
+<div class="comment-section" id="comments">
+  <h2>Comments</h2>
 
-      <% if (member) { %>
-        <form class="comment-form" action="/perfumes/<%= perfume._id %>/comment" method="POST">
-          <label>Rating ( 1–3 ⭐):</label>
-          <select name="rating" required>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐⭐ 2</option>
-            <option value="3">⭐⭐⭐ 3</option>
-          </select>
-          <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
-          <button type="submit">Gửi</button>
-        </form>
-      <% } else { %>
-        <p><a href="/login?redirect=/perfumes/<%= perfume._id %>#comments" class="login-link">Login</a> to comment.</p>
-      <% } %>
+  <% if (member && member.role !== 'admin') { %>
+    <% if (!hasCommented) { %>
+      <form class="comment-form" action="/perfumes/<%= perfume._id %>/comment" method="POST">
+        <label>Rating (1–3 ⭐):</label>
+        <select name="rating" required>
+          <option value="1">⭐ 1</option>
+          <option value="2">⭐⭐ 2</option>
+          <option value="3">⭐⭐⭐ 3</option>
+        </select>
+        <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
+        <button type="submit">Gửi</button>
+      </form>
+    <% } else { %>
+      <p style="color:#aaa;">✅ Bạn đã comment sản phẩm này. Bạn có thể sửa hoặc xóa bình luận của mình bên dưới.</p>
+    <% } %>
+  <% } else if (!member) { %>
+    <p><a href="/login?redirect=/perfumes/<%= perfume._id %>#comments" class="login-link">Login</a> để bình luận.</p>
+  <% } %>
 
-      <% if (comments && comments.length > 0) { %>
-        <% comments.forEach(c => { %>
-          <div class="comment" id="comment-<%= c._id %>">
-            <p><%= c.content %></p>
-            <p>Rating: <%= c.rating %> ⭐</p>
-            <small>👤 <%= c.userId.name %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
+  <% if (comments && comments.length > 0) { %>
+    <% comments.forEach(c => { %>
+      <div class="comment" id="comment-<%= c._id %>">
+        <p><%= c.content %></p>
+        <p>Rating: <%= c.rating %> ⭐</p>
+        <small>👤 <%= c.userId.name %> | 🕒 <%= new Date(c.createdAt).toLocaleString() %></small>
 
-            <% if (member && (member._id.toString() === c.userId._id.toString() || member.role === 'admin')) { %>
-              <div class="comment-actions">
-                <a href="/comments/delete/<%= c._id %>" onclick="return confirm('Delete this comment?')">🗑 Delete</a>
-                <a class="edit-link" data-id="<%= c._id %>">✏️ Sửa</a>
-              </div>
-
-              <form action="/comments/edit/<%= c._id %>" method="POST" class="edit-form" id="edit-form-<%= c._id %>">
-                <textarea name="content" rows="2"><%= c.content %></textarea>
-                <label>Đánh giá:</label>
-                <select name="rating">
-                  <option value="1" <%= c.rating === 1 ? 'selected' : '' %>>⭐ 1</option>
-                  <option value="2" <%= c.rating === 2 ? 'selected' : '' %>>⭐⭐ 2</option>
-                  <option value="3" <%= c.rating === 3 ? 'selected' : '' %>>⭐⭐⭐ 3</option>
-                </select>
-                <button type="submit">💾 Update</button>
-              </form>
+        <% if (member && (member._id.toString() === c.userId._id.toString() || member.role === 'admin')) { %>
+          <div class="comment-actions">
+            <a href="/comments/delete/<%= c._id %>" onclick="return confirm('Delete this comment?')">🗑 Delete</a>
+            <% if (member.role !== 'admin') { %>
+              <a class="edit-link" data-id="<%= c._id %>">✏️ Sửa</a>
             <% } %>
           </div>
-        <% }) %>
-      <% } else { %>
-        <p>No comments yet.</p>
-      <% } %>
-    </div>
+
+          <% if (member.role !== 'admin') { %>
+            <form action="/comments/edit/<%= c._id %>" method="POST" class="edit-form" id="edit-form-<%= c._id %>">
+              <textarea name="content" rows="2"><%= c.content %></textarea>
+              <label>Đánh giá:</label>
+              <select name="rating">
+                <option value="1" <%= c.rating === 1 ? 'selected' : '' %>>⭐ 1</option>
+                <option value="2" <%= c.rating === 2 ? 'selected' : '' %>>⭐⭐ 2</option>
+                <option value="3" <%= c.rating === 3 ? 'selected' : '' %>>⭐⭐⭐ 3</option>
+              </select>
+              <button type="submit">💾 Update</button>
+            </form>
+          <% } %>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No comments yet.</p>
+  <% } %>
+</div>
+
   </div>
 
   <%- include('../partials/footer') %>
 
   <script>
-    // Hiển thị popup nếu có lỗi from server
-    (function() {
-      var error = '<%= error || "" %>';
-      if (error === 'already_commented') {
-        alert('Bạn đã comment sản phẩm này rồi');
-      }
-    })();
 
     // Bật/tắt form sửa
     document.querySelectorAll('.edit-link').forEach(btn => {

@@ -188,59 +188,76 @@ exports.deletePerfume = async (req, res) => {
 
 // Hiển thị chi tiết nước hoa cho admin và user
 exports.getPerfumeDetail = async (req, res) => {
-    try {
-      const perfume = await Perfume.findById(req.params.id);
-      if (!perfume) {
-        return res.status(404).send("Không tìm thấy nước hoa");
-      }
-  
-      // ✅ Lấy danh sách comment theo perfumeId
-      const comments = await Comment.find({ perfumeId: perfume._id })
-        .populate("userId", "name")
-        .sort({ createdAt: -1 });
-  
-      const member = req.session.member;
-  
-      // Tính trung bình dựa trên comments (ưu tiên), fallback sang ratings của Perfume nếu cần
-      const commentRatings = Array.isArray(comments)
-        ? comments.map((c) => Number(c.rating) || 0).filter((n) => n > 0)
-        : [];
-      const ratingsCount = commentRatings.length;
-      let avgRating = 0;
-      if (ratingsCount > 0) {
-        avgRating = commentRatings.reduce((sum, n) => sum + n, 0) / ratingsCount;
-      } else if (typeof perfume.getAverageRating === 'function') {
-        avgRating = perfume.getAverageRating();
-      } else if (Array.isArray(perfume.ratings) && perfume.ratings.length) {
-        avgRating = perfume.ratings.reduce((sum, r) => sum + (r.stars || 0), 0) / perfume.ratings.length;
-      }
-
-      if (member && member.role === "admin") {
-        // 👉 Trang admin xem chi tiết
-        res.render("perfumes/perfumeDetail", {
-          title: `Chi tiết (Admin) - ${perfume.name}`,
-          perfume,
-          member,
-          comments,
-          avgRating,
-          ratingsCount,
-        });
-      } else {
-        res.render("perfumes/detail", {
-          title: perfume.name,
-          perfume,
-          member,
-          comments,
-          avgRating,
-          ratingsCount,
-          error: req.query.error || null,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Lỗi khi tải chi tiết nước hoa");
+  try {
+    const perfume = await Perfume.findById(req.params.id);
+    if (!perfume) {
+      return res.status(404).send("Không tìm thấy nước hoa");
     }
-  };
+
+    // ✅ Lấy danh sách comment kèm user
+    const comments = await Comment.find({ perfumeId: perfume._id })
+      .populate("userId", "name")
+      .sort({ createdAt: -1 });
+
+    const member = req.session.member;
+    const fromHome = req.query.from === "home";
+    const error = req.query.error || null;
+
+    let hasCommented = false;
+    if (member) {
+      hasCommented = comments.some(c => c.userId && c.userId._id.toString() === member._id.toString());
+    }
+    // ✅ Tính trung bình rating nếu có
+    let avgRating = 0;
+    let ratingsCount = 0;
+
+    if (Array.isArray(comments) && comments.length > 0) {
+      const ratings = comments
+        .map(c => Number(c.rating) || 0)
+        .filter(n => n > 0);
+
+      if (ratings.length > 0) {
+        avgRating = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+        ratingsCount = ratings.length;
+      }
+    } else if (Array.isArray(perfume.ratings) && perfume.ratings.length > 0) {
+      avgRating =
+        perfume.ratings.reduce((sum, r) => sum + (r.stars || 0), 0) /
+        perfume.ratings.length;
+      ratingsCount = perfume.ratings.length;
+    }
+
+    // ✅ Phân quyền hiển thị giao diện
+    if (member && member.role === "admin" && !fromHome) {
+      // 👉 Nếu là admin và truy cập từ dashboard
+      return res.render("perfumes/perfumeDetail", {
+        title: `Chi tiết (Admin) - ${perfume.name}`,
+        perfume,
+        member,
+        comments,
+        avgRating,
+        ratingsCount,
+        error,
+      });
+    }
+
+    // 👉 Nếu là user hoặc khách
+    res.render("perfumes/detail", {
+      title: perfume.name,
+      perfume,
+      member,
+      comments,
+      avgRating,
+      ratingsCount,
+      error,
+      hasCommented,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Lỗi khi tải chi tiết nước hoa");
+  }
+};
+
 
   exports.addRating = async (req, res) => {
     try {
